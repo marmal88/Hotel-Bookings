@@ -7,13 +7,18 @@ class ImportData:
     """
 
     def __init__(self, data_location):
-        """instantiate object to connect to sql engine"""
+        """instantiate object to connect to sql engine
+        Args:
+            data_location (string): location of the data.db file
+        """
         self.data_location = data_location
         engine = create_engine("sqlite:///" + self.data_location)
         self.conn = engine.connect()
 
     def return_table(self, table):
         """Returns the datasets found in the SQL connection
+        Args:
+            table (string): name of table to query
         Returns:
             articles (dataframe) : Returns dataframe with from articles table
         """

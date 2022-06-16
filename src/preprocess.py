@@ -10,16 +10,14 @@ class Preprocess:
 
     def __init__(self):
         """Instantiate preprocessing object and load data
-        Args:
-            data_location (string): Location of data file
-        Returns:
-            df: data frame after extraction from data_location
         """
         config = read_yaml_file()
         self.data_location = config["data"]["data_location"]
         self.data_table = config["data"]["data_table"]
         self.int_cols = config["preprocess"]["int_cols"]
         self.exchange = config["preprocess"]["exchange"]
+        self.bins = config["preprocess"]["bins"]
+        self.labels = config["preprocess"]["labels"]
         self.data = ImportData(self.data_location).return_table(self.data_table)
 
     def preprocess_df(self):
@@ -48,6 +46,7 @@ class Preprocess:
             self.data["arrival_month"] = (
                 self.data["arrival_month"].apply(self.title_case).astype("category")
             )
+            self.data["price_types"] = pd.cut(self.data.SGD_price, bins=self.bins,  labels=self.labels, ordered=True)
             return self.data.reset_index()
         else:
             print("Please check if data exists in config location")
@@ -113,3 +112,5 @@ class Preprocess:
         """
         if isinstance(month, str):
             return month.title()
+        else:
+            return month
