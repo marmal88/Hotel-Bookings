@@ -1,3 +1,3 @@
 #!/bin/sh
 
-python src/mlpipe.py
+python src/app.py
