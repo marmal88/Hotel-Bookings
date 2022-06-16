@@ -4,3 +4,6 @@ data:
   data_table: noshow
 preprocess:
   int_cols: ["num_adults", "arrival_day", "checkout_day", "num_children"]
+  exchange: 1.3439
+mlpipeline:
+  dependent_y: no_show
