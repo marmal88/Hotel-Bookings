@@ -33,10 +33,16 @@ Instructions for executing the pipeline and modifying any parameters.
 
 Description of logical steps/flow of the pipeline. If you find it useful, please feel free to include suitable visualization aids (eg, flow charts) within the README.
 
+```mermaid
+
+
+```
+
+
+
 ## E. EDA Findings
 
-Overview of key findings from the EDA conducted in Task 1 and the choices made in the
-pipeline based on these findings, particularly any feature engineering. Please keep the
+Overview of key findings from the EDA conducted in Task 1 and the choices made in the pipeline based on these findings, particularly any feature engineering. Please keep the
 details of the EDA in the `.ipynb`, this section should be a quick summary.
 
 ## F. Model Choice

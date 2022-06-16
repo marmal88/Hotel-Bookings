@@ -1,6 +1,7 @@
+import datetime
+
 import pandas as pd
 import numpy as np
-import datetime
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.impute import SimpleImputer
@@ -25,6 +26,10 @@ class MLpipeline:
         self.drop = config["mlpipeline"]["drop"]
 
     def logregclassifier_pipeline(self, data):
+        """Model Pipeline for Logistic Regression Model
+        Args:
+            data (dataframe): Data as created after the preprocessing steps
+        """
         data.drop(labels=self.drop, axis=1, inplace=True)
         X_train, X_test, y_train, y_test = MLpipeline().model_split(data)
         ct = ColumnTransformer([
@@ -60,7 +65,13 @@ class MLpipeline:
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
         return X_train, X_test, y_train, y_test
 
-    def metrics(self, model, y_true, y_pred, ):
+    def metrics(self, model, y_true, y_pred):
+        """Prints out the model and various classifier metrics to compare model performance
+        Args:
+            model (string): Name of model executed
+            y_true (series): Series of actual test values by the model
+            y_pred (series): Series of predicted values by the model
+        """
         date_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
         accuracy = ((tp+tn) / (tn+fp+fn+tp))*100
