@@ -9,6 +9,7 @@
  - [Summary of EDA](#e-summary-of-eda-findings)
  - [Model Justification](#f-justification-of-model-choice)
  - [Evaluation of Metrics](#g-evaluation-of-model-metrics)
+ - [Other Considerations](#h-other-considerations)
 
 ---
 
@@ -42,7 +43,7 @@ conda activate aiap11
 conda install --file requirements.txt
 ```
 
-### C.2 Pipeline Config
+### C.2 Pipeline Configuration
 
 The model config files can be found in config.yaml within the config folder of the src. The configurable parameters are categrized into:
 
@@ -53,8 +54,8 @@ The model config files can be found in config.yaml within the config folder of t
 ```bash
 src
 |-- config
-|   |-- config.yaml
-|   `-- config_load.py
+    |-- config.yaml
+    `-- config_load.py
 ```
 
 
@@ -77,7 +78,7 @@ details of the EDA in the `.ipynb`, this section should be a quick summary.
 Hence, decided to keep the following columns 
 ["branch", "country", "first_time", "with_child", "SGD_price"]
 
-
+---
 
 ## F. Justification of Model Choice
 
@@ -97,11 +98,14 @@ The decision tree was chosen as it would allow us to form a baseline metrics on 
 - Bagging models like Random Forest Classifiers create extra data by bagging (sampling with replacement) and create multiple parallel models of which mean predictions are used.
 - Boosting models employ iterative strategy for adjusting an observation's weight based on the previous wrongly classified information, hence it predicts well but may not always generalize well.
 
+---
+
 ## G. Evaluation of Model Metrics
 
 Evaluation of the models developed. Any metrics used in the evaluation should also be
 explained.
 
+---
 
 ## H. Other Considerations
 
@@ -110,6 +114,7 @@ explained.
     - Even if column is highly predictive, little actionable policies can be formulated
     - Negative impact of leaked algorithm selection might hurt the business.
 
+---
 
 ## Evaluation
 
