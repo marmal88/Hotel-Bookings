@@ -19,10 +19,16 @@ class Preprocess:
         self.data_location = config["data"]["data_location"]
         self.data_table = config["data"]["data_table"]
         self.int_cols = config["preprocess"]["int_cols"]
+        self.exchange = config["preprocess"]["exchange"]
         self.data = ImportData(self.data_location).return_table(self.data_table)
 
     def preprocess_df(self):
+        """Main pipeline for preprocessing steps
+        Returns:
+            df: data frame after preprocessing steps taken
+        """
         if self.data is not None:
+            self.data = self.data.set_index("booking_id")
             self.data.dropna(how="all", axis=0, inplace=True)
             self.data = self.data.replace(["None", "nan"], np.nan)
             self.data["currency"] = self.data.price.apply(
@@ -31,7 +37,7 @@ class Preprocess:
             self.data["price"] = self.data.price.apply(self.split_price)
             self.data["SGD_price"] = np.where(
                 self.data["currency"] == "USD",
-                round(self.data["price"] * 1.3439, 2),
+                round(self.data["price"] * self.exchange, 2),
                 self.data["price"],
             )
             self.data["num_adults"] = self.data.num_adults.apply(self.chg_to_num)
@@ -42,7 +48,7 @@ class Preprocess:
             self.data["arrival_month"] = (
                 self.data["arrival_month"].apply(self.title_case).astype("category")
             )
-            print(self.data)
+            return self.data.reset_index()
         else:
             print("Please check if data exists in config location")
 
@@ -107,7 +113,3 @@ class Preprocess:
         """
         if isinstance(month, str):
             return month.title()
-
-
-if __name__ == "__main__":
-    Preprocess().preprocess_df()
