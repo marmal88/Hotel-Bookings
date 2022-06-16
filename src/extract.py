@@ -7,7 +7,8 @@ class ImportData:
 
     def __init__(self, data_location):
         """instantiate object to connect to sql engine"""
-        engine = create_engine("sqlite:///"+ data_location)
+        self.data_location = data_location
+        engine = create_engine("sqlite:///" + self.data_location)
         self.conn = engine.connect()
 
     def return_table(self, table):

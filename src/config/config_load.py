@@ -1,6 +1,6 @@
 import yaml
 
-config_location = "./config/config.yaml"
+config_location = "./src/config/config.yaml"
 
 
 def read_yaml_file():

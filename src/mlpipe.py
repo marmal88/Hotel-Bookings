@@ -4,6 +4,7 @@ from sklearn.preprocessing import StandardScaler
 
 from config.config_load import read_yaml_file
 from src.extract import ImportData
+from src.preprocess import Preprocess
 
 class MLpipeline:
     """_summary_
