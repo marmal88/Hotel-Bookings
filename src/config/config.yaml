@@ -4,6 +4,15 @@ data:
   data_table: noshow
 preprocess:
   int_cols: ["num_adults", "arrival_day", "checkout_day", "num_children"]
+  bins: 5
+  labels: ["Lowest", "Lower", "Middle" ,"Upper", "High"]
   exchange: 1.3439
 mlpipeline:
   dependent_y: no_show
+  drop: ["booking_id", "booking_month", "arrival_month", "arrival_day", "checkout_month", "checkout_day" , "room", "price", "platform", "num_adults", "num_children", "currency", "price_types"]
+  # name: logregclassifier
+  #   params:
+  # name: decisiontreeclassifier
+  #   drop: 
+  # name: randomforestclassifier
+  #   drop: 
