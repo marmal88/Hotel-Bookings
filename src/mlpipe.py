@@ -1,7 +1,7 @@
 import datetime
 
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
@@ -11,7 +11,6 @@ from sklearn.pipeline import Pipeline
 from sklearn.metrics import confusion_matrix, classification_report
 
 from config.config_load import read_yaml_file
-from preprocess import Preprocess
 
 
 class MLpipeline:
@@ -67,14 +66,11 @@ class MLpipeline:
         classreport = self.config["mlpipeline"]["class_report"]
         ml_data = data.drop(labels=self.drop, axis=1)
         X_train, X_test, y_train, y_test = MLpipeline().model_split(ml_data)
-        if model == "lr" or "rf":
+        if model == "lr":
             ct = ColumnTransformer(
                 [
-                    (
-                        "OHE",
-                        OneHotEncoder(drop="first"),
-                        ["branch", "country", "first_time"],
-                    ),
+                    ("OHE", OneHotEncoder(drop="first"), ["branch", "country", "first_time"]),
+                    ("OrE", OrdinalEncoder(encoded_missing_value=-1), ["room"]),
                     ("SI", SimpleImputer(strategy="mean"), ["SGD_price"]),
                 ],
                 remainder="drop",
@@ -82,7 +78,8 @@ class MLpipeline:
         else:
             ct = ColumnTransformer(
                 [
-                    # ("OHE", OneHotEncoder(), ["branch", "country", "first_time"]),
+                    ("OrE1", OrdinalEncoder(), ["branch", "country", "first_time"]),
+                    ("OrE2", OrdinalEncoder(encoded_missing_value=-1), ["room"]),
                     ("SI", SimpleImputer(strategy="mean"), ["SGD_price"])
                 ],
                 remainder="passthrough",
@@ -93,7 +90,7 @@ class MLpipeline:
         y_pred_test = pipe.predict(X_test)
         MLpipeline().metrics(
             model_name, y_test, y_pred_test, y_train, y_pred_train, results, classreport
-        )
+        )    
 
     def model_split(self, data):
         """Splits the data into training and testing sets
