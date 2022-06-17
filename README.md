@@ -35,13 +35,22 @@ tree -I __pycache__
 
 ### C.1 Deployment Information
 
-The entire file system was created in a virtual environment using conda, please use the following steps to replicate the virtual environment:
+The entire file system was created in a virtual environment using conda.
+
+Please run the following steps in bash to replicate the virtual environment:
 
 ```bash
 conda create -n aiap11 python=3.9.0
 conda activate aiap11
 conda install --file requirements.txt
 ```
+
+Please run the following steps in bash to run the run.sh file
+
+```bash
+./run.sh
+```
+
 
 ### C.2 Pipeline Configuration
 
