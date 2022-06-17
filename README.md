@@ -94,9 +94,10 @@ The decision tree was chosen as it would allow us to form a baseline metrics on 
 ### F.3 Random Forest Classifier
 
 - Random Forest Model chosen over other decision tree models for example XGBoost due to the commercial nature of the question (hotel bookings)
-- Typically in commmercial situations, changes in data can rapid and hence needed a model that can deal with variance errors better. 
-- Bagging models like Random Forest Classifiers create extra data by bagging (sampling with replacement) and create multiple parallel models of which mean predictions are used.
-- Boosting models employ iterative strategy for adjusting an observation's weight based on the previous wrongly classified information, hence it predicts well but may not always generalize well.
+- Typically in commmercial situations, changes in data can rapid and hence needed a model that can deal with variance errors better.
+- Boosting models for eg XGBoost employs iterative strategy for adjusting an observation's weight based on the previous wrongly classified information, hence boosting models generally result in better prediction outcomes but may not always generalize well.
+- Bagging models like Random Forest Classifiers create extra data by bagging (sampling with replacement) and create multiple parallel models of which mean predictions are chosen. Bagging models hence deal better with data randomness and data variation.
+
 
 ---
 
