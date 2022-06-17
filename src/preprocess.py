@@ -32,26 +32,28 @@ class Preprocess:
             self.data["currency"] = self.data.price.apply(
                 lambda x: np.nan if x is None else x[:3]
             ).astype("category")
-            self.data["price"] = self.data.price.apply(self.split_price)
+            self.data["price"] = self.data.price.apply(self._split_price)
             self.data["SGD_price"] = np.where(
                 self.data["currency"] == "USD",
                 round(self.data["price"] * self.exchange, 2),
                 self.data["price"],
             )
-            self.data["num_adults"] = self.data.num_adults.apply(self.chg_to_num)
+            self.data["num_adults"] = self.data.num_adults.apply(self._chg_to_num)
             self.data[self.int_cols] = self.data[self.int_cols].astype("int")
-            self.data["first_time"] = self.data["first_time"].apply(self.to_bool)
-            self.data["no_show"] = self.data["no_show"].apply(self.to_bool)
-            self.data["checkout_day"] = self.data.checkout_day.apply(self.checkout_neg)
+            self.data["first_time"] = self.data["first_time"].apply(self._to_bool)
+            self.data["no_show"] = self.data["no_show"].apply(self._to_bool)
+            self.data["checkout_day"] = self.data.checkout_day.apply(self._checkout_neg)
             self.data["arrival_month"] = (
-                self.data["arrival_month"].apply(self.title_case).astype("category")
+                self.data["arrival_month"].apply(self._title_case).astype("category")
             )
-            self.data["price_types"] = pd.cut(self.data.SGD_price, bins=self.bins,  labels=self.labels, ordered=True)
+            self.data["price_types"] = pd.cut(
+                self.data.SGD_price, bins=self.bins, labels=self.labels, ordered=True
+            )
             return self.data.reset_index()
         else:
             print("Please check if data exists in config location")
 
-    def split_price(self, price):
+    def _split_price(self, price):
         """Parse out the relevant price from the series
         Args:
             price (string): price with full currency and price
@@ -63,7 +65,7 @@ class Preprocess:
         else:
             return float(price[5:])
 
-    def chg_to_num(self, num):
+    def _chg_to_num(self, num):
         """Change numbers from string to integers for use in lambda only
         Args:
             num (string): string version of integer
@@ -79,7 +81,7 @@ class Preprocess:
         else:
             return int(num)
 
-    def to_bool(self, non_bool):
+    def _to_bool(self, non_bool):
         """Change from Non Boolean to Boolean values
         Args:
             non_bool: can either be 1 or "Yes"
@@ -91,7 +93,7 @@ class Preprocess:
         else:
             return False
 
-    def checkout_neg(self, num):
+    def _checkout_neg(self, num):
         """For each day provided return the absolute number
         Args:
             num (integer): checkout day provided
@@ -103,7 +105,7 @@ class Preprocess:
         else:
             return num
 
-    def title_case(self, month):
+    def _title_case(self, month):
         """Change input into titlecase
         Args:
             month (string): month input

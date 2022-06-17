@@ -13,15 +13,17 @@ from sklearn.metrics import confusion_matrix, classification_report
 from config.config_load import read_yaml_file
 from preprocess import Preprocess
 
+
 class MLpipeline:
     """Class that wraps the machine learning pipeline
     """
+
     def __init__(self):
         """Instantiate MLpipeline object and load data
         """
         self.config = read_yaml_file()
         self.dependent_y = self.config["mlpipeline"]["dependent_y"]
-        self.drop = self.config["mlpipeline"]["drop"] 
+        self.drop = self.config["mlpipeline"]["drop"]
 
     def ml_workflow(self, data, model):
         """Model Pipeline for Logistic Regression Model
@@ -30,47 +32,68 @@ class MLpipeline:
             model (string): Model to use
         """
         if isinstance(model, str):
-            if model=="lr":
+            if model == "lr":
                 model_name = self.config["mlpipeline"]["lr"]["name"]
                 penalty = self.config["mlpipeline"]["lr"]["params"]["penalty"]
                 solver = self.config["mlpipeline"]["lr"]["params"]["solver"]
                 max_iter = self.config["mlpipeline"]["lr"]["params"]["max_iter"]
-                model_obj = LogisticRegression(penalty=penalty, solver=solver, max_iter=max_iter)
-            elif model=="dt":
+                model_obj = LogisticRegression(
+                    penalty=penalty, solver=solver, max_iter=max_iter
+                )
+            elif model == "dt":
                 model_name = self.config["mlpipeline"]["dt"]["name"]
                 max_depth = self.config["mlpipeline"]["rf"]["params"]["max_depth"]
-                min_samples_split = self.config["mlpipeline"]["rf"]["params"]["min_samples_split"]
-                model_obj = DecisionTreeClassifier(max_depth=max_depth, min_samples_split=min_samples_split)
-            elif model=="rf":
+                min_samples_split = self.config["mlpipeline"]["rf"]["params"][
+                    "min_samples_split"
+                ]
+                model_obj = DecisionTreeClassifier(
+                    max_depth=max_depth, min_samples_split=min_samples_split
+                )
+            elif model == "rf":
                 model_name = self.config["mlpipeline"]["rf"]["name"]
                 n_estimators = self.config["mlpipeline"]["rf"]["params"]["n_estimators"]
                 max_depth = self.config["mlpipeline"]["rf"]["params"]["max_depth"]
-                min_samples_split = self.config["mlpipeline"]["rf"]["params"]["min_samples_split"]
-                model_obj = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, min_samples_split=min_samples_split)
+                min_samples_split = self.config["mlpipeline"]["rf"]["params"][
+                    "min_samples_split"
+                ]
+                model_obj = RandomForestClassifier(
+                    n_estimators=n_estimators,
+                    max_depth=max_depth,
+                    min_samples_split=min_samples_split,
+                )
             else:
                 print("Invalid model, please check if model exists in config")
         results = self.config["mlpipeline"]["results"]
+        classreport = self.config["mlpipeline"]["class_report"]
         ml_data = data.drop(labels=self.drop, axis=1)
         X_train, X_test, y_train, y_test = MLpipeline().model_split(ml_data)
-        if model=="lr" or "rf":
-            ct = ColumnTransformer([
-                ("OHE", OneHotEncoder(drop="first"), ["branch", "country", "first_time"]),
-                ("SI", SimpleImputer(strategy="mean"), ["SGD_price"])
-                ], remainder='drop')
+        if model == "lr" or "rf":
+            ct = ColumnTransformer(
+                [
+                    (
+                        "OHE",
+                        OneHotEncoder(drop="first"),
+                        ["branch", "country", "first_time"],
+                    ),
+                    ("SI", SimpleImputer(strategy="mean"), ["SGD_price"]),
+                ],
+                remainder="drop",
+            )
         else:
-            ct = ColumnTransformer([
-                # ("OHE", OneHotEncoder(), ["branch", "country", "first_time"]),
-                ("SI", SimpleImputer(strategy="mean"), ["SGD_price"])
-                ], remainder='passthrough')
-        pipe = Pipeline([
-            ("column_transfomer", ct),
-            ("classifier", model_obj)
-            ])
+            ct = ColumnTransformer(
+                [
+                    # ("OHE", OneHotEncoder(), ["branch", "country", "first_time"]),
+                    ("SI", SimpleImputer(strategy="mean"), ["SGD_price"])
+                ],
+                remainder="passthrough",
+            )
+        pipe = Pipeline([("column_transfomer", ct), ("classifier", model_obj)])
         pipe.fit(X_train, y_train)
         y_pred_train = pipe.predict(X_train)
         y_pred_test = pipe.predict(X_test)
-        MLpipeline().metrics(model_name, y_test, y_pred_test, y_train, y_pred_train, results)
-
+        MLpipeline().metrics(
+            model_name, y_test, y_pred_test, y_train, y_pred_train, results, classreport
+        )
 
     def model_split(self, data):
         """Splits the data into training and testing sets
@@ -84,10 +107,12 @@ class MLpipeline:
         """
         X = data.drop(columns=self.dependent_y)
         y = data[self.dependent_y]
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.33, random_state=42
+        )
         return X_train, X_test, y_train, y_test
 
-    def metrics(self, model, y_test, y_pred_test, y_train, y_pred_train, results):
+    def metrics(self, model, y_test, y_pred_test, y_train, y_pred_train, results, classreport):
         """Prints out the model and various classifier metrics to compare model performance
         Args:
             model (string): Name of model executed
@@ -98,25 +123,29 @@ class MLpipeline:
         print(f"Model Evaluation Metrics for {model} at time {date_time}")
         if results:
             tr_tn, tr_fp, tr_fn, tr_tp = confusion_matrix(y_train, y_pred_train).ravel()
-            train_acc = ((tr_tp+tr_tn) / (tr_tn+tr_fp+tr_fn+tr_tp))*100
-            train_prec = (tr_tp/(tr_tp+tr_fp))*100
-            train_recall = (tr_tp/(tr_tp+tr_fn))*100
-            train_f1 = ((2*train_prec*train_recall)/(train_prec+train_recall))
+            train_acc = ((tr_tp + tr_tn) / (tr_tn + tr_fp + tr_fn + tr_tp)) * 100
+            train_prec = (tr_tp / (tr_tp + tr_fp)) * 100
+            train_recall = (tr_tp / (tr_tp + tr_fn)) * 100
+            train_f1 = (2 * train_prec * train_recall) / (train_prec + train_recall)
             print(f"{model} Train Set Model Metrics")
             print(f"Train Set Precision {train_prec:.2f}%")
             print(f"Train Set Accuracy {train_acc:.2f}%")
             print(f"Train Set F1-Score {train_f1:.2f}%")
             print(f"Train Set Recall {train_recall:.2f}%")
+            
 
         t_tn, t_fp, t_fn, t_tp = confusion_matrix(y_test, y_pred_test).ravel()
-        test_acc = ((t_tp+t_tn) / (t_tn+t_fp+t_fn+t_tp))*100
-        test_prec = (t_tp/(t_tp+t_fp))*100
-        test_recall = (t_tp/(t_tp+t_fn))*100
-        test_f1 = ((2*test_prec*test_recall)/(test_prec+test_recall))
+        test_acc = ((t_tp + t_tn) / (t_tn + t_fp + t_fn + t_tp)) * 100
+        test_prec = (t_tp / (t_tp + t_fp)) * 100
+        test_recall = (t_tp / (t_tp + t_fn)) * 100
+        test_f1 = (2 * test_prec * test_recall) / (test_prec + test_recall)
         print(f"{model} Test Set Model Metrics")
         print(f"Test Set Precision {test_prec:.2f}%")
         print(f"Test Set Accuracy {test_acc:.2f}%")
         print(f"Test Set F1-Score {test_f1:.2f}%")
         print(f"Test Set Recall {test_recall:.2f}%")
-        # print(classification_report(y_test, y_pred_test))
-        # print(classification_report(y_train, y_pred_train))
+
+        if classreport:
+            print(classification_report(y_train, y_pred_train))
+            print(classification_report(y_test, y_pred_test))
+        

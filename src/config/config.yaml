@@ -11,6 +11,7 @@ mlpipeline:
   dependent_y: no_show
   drop: ["booking_id", "booking_month", "arrival_month", "arrival_day", "checkout_month", "checkout_day" , "room", "price", "platform", "num_adults", "num_children", "currency", "price_types"]
   results: True
+  class_report: False
   lr:
     name: "Logistic Regression Classifier"
     params:
