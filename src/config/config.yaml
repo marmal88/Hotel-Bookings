@@ -10,10 +10,25 @@ preprocess:
 mlpipeline:
   dependent_y: no_show
   drop: ["booking_id", "booking_month", "arrival_month", "arrival_day", "checkout_month", "checkout_day" , "room", "price", "platform", "num_adults", "num_children", "currency", "price_types"]
-  # name: logregclassifier
-  #   params:
-  # name: decisiontreeclassifier
-  #   drop: 
-  # name: randomforestclassifier
-  #   drop: 
+  results: True
+  lr:
+    name: "Logistic Regression Classifier"
+    params:
+      penalty: "l1"
+      solver: "liblinear"
+      max_iter: 100
+  dt:
+    name: "Decision Tree Classifier"
+    params:
+      max_depth: 10
+      min_samples_split: 2
+  rf:
+    name: "Random Forest Classifier"
+    params:
+      n_estimators: 150
+      max_depth: 5
+      min_samples_split: 2
+
+
+
 
