@@ -50,8 +50,7 @@ class Preprocess:
                 self.data.SGD_price, bins=self.bins, labels=self.labels, ordered=True
             )
             return self.data.reset_index()
-        else:
-            print("Please check if data exists in config location")
+        print("Please check if data exists in config location")
 
     def _split_price(self, price):
         """Parse out the relevant price from the series
@@ -62,8 +61,7 @@ class Preprocess:
         """
         if price == "None" or price is None:
             return np.nan
-        else:
-            return float(price[5:])
+        return float(price[5:])
 
     def _chg_to_num(self, num):
         """Change numbers from string to integers for use in lambda only
@@ -88,10 +86,9 @@ class Preprocess:
         Returns:
             non_bool: boolean version of string
         """
-        if non_bool == "Yes" or non_bool == 1:
+        if non_bool in ("Yes", 1):
             return True
-        else:
-            return False
+        return False
 
     def _checkout_neg(self, num):
         """For each day provided return the absolute number
@@ -102,8 +99,7 @@ class Preprocess:
         """
         if num < 0:
             return abs(num)
-        else:
-            return num
+        return num
 
     def _title_case(self, month):
         """Change input into titlecase
@@ -114,5 +110,4 @@ class Preprocess:
         """
         if isinstance(month, str):
             return month.title()
-        else:
-            return month
+        return month

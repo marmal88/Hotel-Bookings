@@ -69,7 +69,11 @@ class MLpipeline:
         if model == "lr":
             ct = ColumnTransformer(
                 [
-                    ("OHE", OneHotEncoder(drop="first"), ["branch", "country", "first_time"]),
+                    (
+                        "OHE",
+                        OneHotEncoder(drop="first"),
+                        ["branch", "country", "first_time"],
+                    ),
                     ("OrE", OrdinalEncoder(encoded_missing_value=-1), ["room"]),
                     ("SI", SimpleImputer(strategy="mean"), ["SGD_price"]),
                 ],
@@ -80,7 +84,7 @@ class MLpipeline:
                 [
                     ("OrE1", OrdinalEncoder(), ["branch", "country", "first_time"]),
                     ("OrE2", OrdinalEncoder(encoded_missing_value=-1), ["room"]),
-                    ("SI", SimpleImputer(strategy="mean"), ["SGD_price"])
+                    ("SI", SimpleImputer(strategy="mean"), ["SGD_price"]),
                 ],
                 remainder="passthrough",
             )
@@ -90,7 +94,7 @@ class MLpipeline:
         y_pred_test = pipe.predict(X_test)
         MLpipeline().metrics(
             model_name, y_test, y_pred_test, y_train, y_pred_train, results, classreport
-        )    
+        )
 
     def model_split(self, data):
         """Splits the data into training and testing sets
@@ -109,7 +113,9 @@ class MLpipeline:
         )
         return X_train, X_test, y_train, y_test
 
-    def metrics(self, model, y_test, y_pred_test, y_train, y_pred_train, results, classreport):
+    def metrics(
+        self, model, y_test, y_pred_test, y_train, y_pred_train, results, classreport
+    ):
         """Prints out the model and various classifier metrics to compare model performance
         Args:
             model (string): Name of model executed
@@ -129,7 +135,6 @@ class MLpipeline:
             print(f"Train Set Accuracy {train_acc:.2f}%")
             print(f"Train Set F1-Score {train_f1:.2f}%")
             print(f"Train Set Recall {train_recall:.2f}%")
-            
 
         t_tn, t_fp, t_fn, t_tp = confusion_matrix(y_test, y_pred_test).ravel()
         test_acc = ((t_tp + t_tn) / (t_tn + t_fp + t_fn + t_tp)) * 100
@@ -145,4 +150,3 @@ class MLpipeline:
         if classreport:
             print(classification_report(y_train, y_pred_train))
             print(classification_report(y_test, y_pred_test))
-        
