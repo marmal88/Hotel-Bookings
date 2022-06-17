@@ -7,9 +7,16 @@ preprocess:
   bins: 5
   labels: ["Lowest", "Lower", "Middle" ,"Upper", "High"]
   exchange: 1.3439
+feature_eng:
+  ohe1: ["branch", "country", "first_time"]
+  ore1: []
+  sim1: ["SGD_price"]
+  ore2: ["branch", "country", "first_time"]
+  sim2: ["SGD_price"]
+  strategy: "mean"
 mlpipeline:
   dependent_y: no_show
-  drop: ["booking_id", "booking_month", "arrival_month", "arrival_day", "checkout_month", "checkout_day" , "price", "platform", "num_adults", "num_children", "currency", "price_types"]
+  drop: ["booking_id", "booking_month", "arrival_month", "arrival_day", "checkout_month", "checkout_day" , "price", "platform", "num_adults", "num_children", "currency", "price_types", "room"]
   results: True
   class_report: False
   lr:
@@ -26,10 +33,7 @@ mlpipeline:
   rf:
     name: "Random Forest Classifier"
     params:
-      n_estimators: 200
+      n_estimators: 150
       max_depth: 3
-      min_samples_split: 5
-
-
-
+      min_samples_split: 4
 

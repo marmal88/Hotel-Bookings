@@ -23,6 +23,12 @@ class MLpipeline:
         self.config = read_yaml_file()
         self.dependent_y = self.config["mlpipeline"]["dependent_y"]
         self.drop = self.config["mlpipeline"]["drop"]
+        self.ohe1 = self.config["feature_eng"]["ohe1"]
+        self.ore1 = self.config["feature_eng"]["ore1"]
+        self.sim1 = self.config["feature_eng"]["sim1"]
+        self.ore2 = self.config["feature_eng"]["ore2"]
+        self.sim2 = self.config["feature_eng"]["sim2"]
+        self.strategy = self.config["feature_eng"]["strategy"]
 
     def ml_workflow(self, data, model):
         """Model Pipeline for Logistic Regression Model
@@ -62,29 +68,22 @@ class MLpipeline:
                 )
             else:
                 print("Invalid model, please check if model exists in config")
-        results = self.config["mlpipeline"]["results"]
-        classreport = self.config["mlpipeline"]["class_report"]
         ml_data = data.drop(labels=self.drop, axis=1)
         X_train, X_test, y_train, y_test = MLpipeline().model_split(ml_data)
         if model == "lr":
             ct = ColumnTransformer(
                 [
-                    (
-                        "OHE",
-                        OneHotEncoder(drop="first"),
-                        ["branch", "country", "first_time"],
-                    ),
-                    ("OrE", OrdinalEncoder(encoded_missing_value=-1), ["room"]),
-                    ("SI", SimpleImputer(strategy="mean"), ["SGD_price"]),
+                    ("ohe1", OneHotEncoder(drop="first"), self.ohe1),
+                    ("ore1", OrdinalEncoder(encoded_missing_value=-1), self.ore1),
+                    ("sim1", SimpleImputer(strategy=self.strategy), self.sim1),
                 ],
                 remainder="drop",
             )
         else:
             ct = ColumnTransformer(
                 [
-                    ("OrE1", OrdinalEncoder(), ["branch", "country", "first_time"]),
-                    ("OrE2", OrdinalEncoder(encoded_missing_value=-1), ["room"]),
-                    ("SI", SimpleImputer(strategy="mean"), ["SGD_price"]),
+                    ("ore2", OrdinalEncoder(encoded_missing_value=-1), self.ore2),
+                    ("sim2", SimpleImputer(strategy=self.strategy), self.sim2),
                 ],
                 remainder="passthrough",
             )
@@ -93,7 +92,7 @@ class MLpipeline:
         y_pred_train = pipe.predict(X_train)
         y_pred_test = pipe.predict(X_test)
         MLpipeline().metrics(
-            model_name, y_test, y_pred_test, y_train, y_pred_train, results, classreport
+            model_name, y_test, y_pred_test, y_train, y_pred_train
         )
 
     def model_split(self, data):
@@ -109,19 +108,19 @@ class MLpipeline:
         X = data.drop(columns=self.dependent_y)
         y = data[self.dependent_y]
         X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.33, random_state=42
+            X, y, test_size=0.3, random_state=42
         )
         return X_train, X_test, y_train, y_test
 
-    def metrics(
-        self, model, y_test, y_pred_test, y_train, y_pred_train, results, classreport
-    ):
+    def metrics(self, model, y_test, y_pred_test, y_train, y_pred_train):
         """Prints out the model and various classifier metrics to compare model performance
         Args:
             model (string): Name of model executed
             y_test (series): Series of actual test values by the model
             y_pred_test (series): Series of predicted values by the model
         """
+        results = self.config["mlpipeline"]["results"]
+        classreport = self.config["mlpipeline"]["class_report"]
         date_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         print(f"Model Evaluation Metrics for {model} at time {date_time}")
         if results:
@@ -133,8 +132,8 @@ class MLpipeline:
             print(f"{model} Train Set Model Metrics")
             print(f"Train Set Precision {train_prec:.2f}%")
             print(f"Train Set Accuracy {train_acc:.2f}%")
-            print(f"Train Set F1-Score {train_f1:.2f}%")
             print(f"Train Set Recall {train_recall:.2f}%")
+            print(f"Train Set F1-Score {train_f1:.2f}%")
 
         t_tn, t_fp, t_fn, t_tp = confusion_matrix(y_test, y_pred_test).ravel()
         test_acc = ((t_tp + t_tn) / (t_tn + t_fp + t_fn + t_tp)) * 100
@@ -144,8 +143,8 @@ class MLpipeline:
         print(f"{model} Test Set Model Metrics")
         print(f"Test Set Precision {test_prec:.2f}%")
         print(f"Test Set Accuracy {test_acc:.2f}%")
-        print(f"Test Set F1-Score {test_f1:.2f}%")
         print(f"Test Set Recall {test_recall:.2f}%")
+        print(f"Test Set F1-Score {test_f1:.2f}%")
 
         if classreport:
             print(classification_report(y_train, y_pred_train))
