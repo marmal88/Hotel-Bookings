@@ -105,18 +105,18 @@ graph LR;
     G-->E
 ```
 
-Using information from the EDA phase of the study 
+Preprocessing steps undertaken
 
-Preprocessing steps undertaken include:
-
-1. Splitting the price from [SGD$ 666.04, USD$ 665.37] and converting them to SGD using an average USD to SGD conversion rate
+1. Splitting the price from currency and converting them to SGD using an average USD to SGD conversion rate (can be configured, see [yaml](#c2-pipeline-configuration))
 2. 
 
-Feature Engineering
+Feature Engineering steps undertaken
 
-1. One Hot Encoding - 
-2. Ordinal Encoding - 
-3. Simple Imputer - for missing price values impute the mean price
+1. One Hot Encoding - shows presence of values by columns, drops first column to prevent sparese data.
+2. Ordinal Encoding:
+    - Ordinal Encoder for those without missing values
+    - Ordinal Encoder that encodes missing as -1 (e.g. labelling as missing)
+3. Simple Imputer - for missing price values impute the mean price, can be configured to median
 
 ---
 
@@ -125,16 +125,19 @@ Feature Engineering
 Overview of key findings from the EDA conducted in Task 1 and the choices made in the pipeline based on these findings, particularly any feature engineering. Please keep the
 details of the EDA in the `.ipynb`, this section should be a quick summary.
 
-Hence, decided to keep the following columns 
-- branch
-- country
-- room
-- first_time
-- with_child
-- SGD_price
+Hence, decided to keep the following columns:
+
+| Categories| Type| Reason|
+|---|---|---|
+| with_child | Boolean| Those with children have a 63.22% chance of no show |
+| branch | Nominal Category| High proportion of no show for specific nationalities (CN, ID, MY)|
+| country | Nominal Category| More no shows at the Changi vs Orchard Branches|
+| first_time | Boolean| First time customers proportion of no show at 98.75% |
+| SGD_price | Continuous Variable| Lower prices (mass market) tend to have more no shows|
 
 Checking for imbalance dataset
-- Dataset is not overly skwed towards either show or no show
+
+- Dataset is not overly skewed towards either show or no show
 - No show being around 37.04% of overall bookings
 - Average cancellation rate on Booking.com and Expedia were 39% and 25% respectively [link](https://www.hoteliga.com/en/blog/how-to-reduce-no-shows-at-your-hotel)
 
@@ -157,7 +160,6 @@ The decision tree was chosen as it would allow us to form a baseline metrics on 
 - Typically in commmercial situations, changes in data can rapid and hence needed a model that can deal with variance errors better.
 - Boosting models for eg XGBoost employs iterative strategy for adjusting an observation's weight based on the previous wrongly classified information, hence boosting models generally result in better prediction outcomes but may not always generalize well.
 - Bagging models like Random Forest Classifiers create extra data by bagging (sampling with replacement) and create multiple parallel models of which mean predictions are chosen. Bagging models hence deal better with data randomness and data variation.
-
 
 ---
 
@@ -193,18 +195,3 @@ explained.
 4. Appropriate use of evaluation metrics
 5. Appropriate explanation for the choice of evaluation metrics
 6. Understanding of the different components in the machine learning pipeline
-
-### Penalties
-1. Incorrect format for `requirements.txt`
-2. `run.sh` fails upon execution
-3. Poorly structured `README.md`
-4. Disorganised code that fails to make use of functions and/or classes for reusability
-5. Machine learning pipeline built using Jupyter Notebooks.
-
-### Feature Engineering
-
-#### Model Building Thought Process
-- Prediction of No-Show clearly means that a **Classifier Model** is required
-- Addressing classifier model weaknesses
-    - 
-    
