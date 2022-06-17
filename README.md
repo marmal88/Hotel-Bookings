@@ -26,7 +26,24 @@
 Overview of the submitted folder and the folder structure
 
 ```bash
-tree -I __pycache__
+.
+|-- README.md
+|-- config
+|-- data
+|   `-- noshow.db
+|-- eda.ipynb
+|-- requirements.txt
+|-- run.sh
+|-- src
+|   |-- app.py
+|   |-- config
+|   |   |-- config.yaml
+|   |   `-- config_load.py
+|   |-- extract.py
+|   |-- mlpipe.py
+|   `-- preprocess.py
+`-- tests
+    `-- test_extract.py
 ```
 
 ---
@@ -70,12 +87,36 @@ src
 
 ## D. Pipeline Flow Information
 
-Description of logical steps/flow of the pipeline. If you find it useful, please feel free to include suitable visualization aids (eg, flow charts) within the README.
+As far as possible, the intent was to use a similar data pipeline for all three models to increase model reusability. However, during the feature engineering phase wanted to optimize for the features that can get the best results from the different models.
+
+Hence, the overall pipeline was built to create a common preprocessing step while using sklearn's inbuilt pipeline to do the feature engineering. Overall pipeline is as below:
 
 ```mermaid
+graph LR;
+    Y([Data Ingestion])-->A
+    A([Preprocessing])-->B;
 
+    B{Model Choice}-->C
+    C([Feature Engineering:</br> 1. OneHotEncoder,</br> 2. Ordinal Encoder,</br> 3. Simple Imputer</br>])-->D;
+    D([Logistic regression])-->E([Evalation Metrics]);
 
+    B-->F([Feature Engineering:</br> 1. Ordinal Encoder,</br> 2. Simple Imputer])
+    F-->G([Tree based models])
+    G-->E
 ```
+
+Using information from the EDA phase of the study 
+
+Preprocessing steps undertaken include:
+
+1. Splitting the price from [SGD$ 666.04, USD$ 665.37] and converting them to SGD using an average USD to SGD conversion rate
+2. 
+
+Feature Engineering
+
+1. One Hot Encoding - 
+2. Ordinal Encoding - 
+3. Simple Imputer - for missing price values impute the mean price
 
 ---
 
@@ -85,7 +126,17 @@ Overview of key findings from the EDA conducted in Task 1 and the choices made i
 details of the EDA in the `.ipynb`, this section should be a quick summary.
 
 Hence, decided to keep the following columns 
-["branch", "country", "first_time", "with_child", "SGD_price"]
+- branch
+- country
+- room
+- first_time
+- with_child
+- SGD_price
+
+Checking for imbalance dataset
+- Dataset is not overly skwed towards either show or no show
+- No show being around 37.04% of overall bookings
+- Average cancellation rate on Booking.com and Expedia were 39% and 25% respectively [link](https://www.hoteliga.com/en/blog/how-to-reduce-no-shows-at-your-hotel)
 
 ---
 
@@ -115,6 +166,14 @@ The decision tree was chosen as it would allow us to form a baseline metrics on 
 Evaluation of the models developed. Any metrics used in the evaluation should also be
 explained.
 
+1. Optimize for which metrics?
+    - Should optimize for precision (i.e. Within those that we classified as no-show, how many of them are indeed no-show?)
+2. Impact of False Positive (Type 1 error)?
+    - For a reputable hotel chain the cost of a type 1 error is extremely high. 
+    - Customers who booked and paid deposits would be disappointed if rooms are not ready or worse no-rooms available
+3. Impact of False Negative (Type 2 error)?
+    - Cost is limited to current ops cost (cost of leaving room vacant due to no-show)  
+
 ---
 
 ## H. Other Considerations
@@ -141,3 +200,11 @@ explained.
 3. Poorly structured `README.md`
 4. Disorganised code that fails to make use of functions and/or classes for reusability
 5. Machine learning pipeline built using Jupyter Notebooks.
+
+### Feature Engineering
+
+#### Model Building Thought Process
+- Prediction of No-Show clearly means that a **Classifier Model** is required
+- Addressing classifier model weaknesses
+    - 
+    

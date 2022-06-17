@@ -31,7 +31,7 @@ jobs:
       - name: Lint pylint
         run: |
           export PYTHONPATH=${PWD}
-          pylint --fail-under=7 ${PWD}/src ${PWD}/tests
+          pylint --fail-under=8 ${PWD}/src ${PWD}/tests
   unit-test:
     runs-on: ubuntu-latest
     steps:
