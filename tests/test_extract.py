@@ -4,7 +4,7 @@ import pytest
 from src.config.config_load import read_yaml_file
 from src.extract import ImportData
 
-@pytest.fixture
+@pytest.fixture(name="fixture_extract")
 def fixture_extract():
     """Pytest fixture for ImportData Object
     Returns:
@@ -12,8 +12,7 @@ def fixture_extract():
     """
     config = read_yaml_file()
     data_location = config["data"]["data_location"]
-    main = ImportData(data_location)
-    return main
+    return ImportData(data_location)
 
 def test_dataframe(fixture_extract):
     """Testing to see if return is indeed dataframe object type
