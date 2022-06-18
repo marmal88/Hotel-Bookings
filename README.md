@@ -32,6 +32,8 @@ Overview of the submitted folder and the folder structure
 |-- data
 |   `-- noshow.db
 |-- eda.ipynb
+|-- output
+|   `-- Evaluation_Metrics_2022-06-18.txt
 |-- requirements.txt
 |-- run.sh
 |-- src
@@ -43,7 +45,7 @@ Overview of the submitted folder and the folder structure
 |   |-- mlpipe.py
 |   `-- preprocess.py
 `-- tests
-    `-- test_extract.py
+    `-- test_extract.p
 ```
 
 ---
@@ -54,7 +56,7 @@ Overview of the submitted folder and the folder structure
 
 The entire file system was created in a virtual environment using conda.
 
-Please run the following steps in bash to replicate the virtual environment:
+Please execute the following steps in bash to replicate the virtual environment:
 
 ```bash
 conda create -n aiap11 python=3.9.0
@@ -62,7 +64,7 @@ conda activate aiap11
 conda install --file requirements.txt
 ```
 
-Please run the following steps in bash to run the run.sh file
+Please execute the following steps in bash to run the run.sh file:
 
 ```bash
 ./run.sh
@@ -90,6 +92,15 @@ src
 As far as possible, the intent was to use a similar data pipeline for all three models to increase model reusability. However, during the feature engineering phase wanted to optimize for the features that can get the best results from the different models.
 
 Hence, the overall pipeline was built to create a common preprocessing step while using sklearn's inbuilt pipeline to do the feature engineering. Overall pipeline is as below:
+| Step | File Location |Purpose |
+|---|---|---|
+| Data ingestion | extract.py | Connect and query database provided in config|
+| Preprocess | preprocess.py | Data cleaning and create new data types |
+| Feature Engineering | mlpipe.py | Employ feature engineering steps |
+| Model | mlpipe.py | Fit model to output of engineered data|
+| Evaluation Metrics | mlpipe.py | Run selected evaluation metrics on model output|
+
+The output of the pipleline is saved in the output folder of the directory as a txt file.
 
 ```mermaid
 graph LR;
@@ -98,25 +109,37 @@ graph LR;
 
     B{Model Choice}-->C
     C([Feature Engineering:</br> 1. OneHotEncoder,</br> 2. Ordinal Encoder,</br> 3. Simple Imputer</br>])-->D;
-    D([Logistic regression])-->E([Evalation Metrics]);
+    D([Model Fitting</br>Logistic regression])-->E([Evalation Metrics]);
 
     B-->F([Feature Engineering:</br> 1. Ordinal Encoder,</br> 2. Simple Imputer])
-    F-->G([Tree based models])
+    F-->G([Model Fitting</br>Tree based models])
     G-->E
 ```
 
-Preprocessing steps undertaken
+Preprocessing steps undertaken:
 
-1. Splitting the price from currency and converting them to SGD using an average USD to SGD conversion rate (can be configured, see [yaml](#c2-pipeline-configuration))
-2. 
+| Errors | Columns | Error Type (Assumption) | Treatment |
+|---|---|---|---|
+|Empty rows| All columns| Database parsing error | Removal of empty rows |
+|Free text error |num_adults| Data entry error| Changed [1,2,"one", "two"] within series into [1,2]|
+|Boolean|first_time, no_show| Type error | Converted float to boolean|
+|Free text error|checkout_month| Data entry error| Changed to title case|
+|Negative numbers in days|checkout_day| Data entry error| Return the absolute of those days|
+|Float point numbers|num_adults, arrival_day, checkout_day, num_children| Database parsing error | Converted float to integer|
+|Currency and price in same column|price|Database planning error|Split out currency and price and converting them to SGD using an average USD to SGD conversion rate (can be configured, see [yaml](#c2-pipeline-configuration))|
+1. 
+2. Splitting the price from currency and converting them to SGD using an average USD to SGD conversion rate (can be configured, see [yaml](#c2-pipeline-configuration))
+3. "num_adults" was a freetext field, hence  (data-entry error)
+4. Several columns was saved as float in database but should have been integers 
 
-Feature Engineering steps undertaken
+
+Feature Engineering steps undertaken:
 
 1. One Hot Encoding - shows presence of values by columns, drops first column to prevent sparese data.
 2. Ordinal Encoding:
-    - Ordinal Encoder for those without missing values
-    - Ordinal Encoder that encodes missing as -1 (e.g. labelling as missing)
-3. Simple Imputer - for missing price values impute the mean price, can be configured to median
+    - Ordinal Encoder for those without missing values.
+    - Ordinal Encoder that encodes missing as -1 (e.g. labelling as missing).
+3. Simple Imputer - for missing price values impute the mean price, can be configured to median.
 
 ---
 
@@ -135,28 +158,31 @@ Hence, decided to keep the following columns:
 | first_time | Boolean| First time customers proportion of no show at 98.75% |
 | SGD_price | Continuous Variable| Lower prices (mass market) tend to have more no shows|
 
-Checking for imbalance dataset
+Checking for imbalance dataset:
 
-- Dataset is not overly skewed towards either show or no show
-- No show being around 37.04% of overall bookings
+- Dataset is not overly skewed towards either show or no show.
+- No show being around 37.04% of overall bookings.
 - Average cancellation rate on Booking.com and Expedia were 39% and 25% respectively [link](https://www.hoteliga.com/en/blog/how-to-reduce-no-shows-at-your-hotel)
 
 ---
 
 ## F. Justification of Model Choice
 
-
 ### F.1 Logistic Regression
 
-Baseline Classifier Model
+- The logistic regession model (LR) was chosen as a baseline for comparing other classification models DT and RF.
+- LR model allows for configuration between solver, penalty, c strength and iterations.
+- By applying the different levers in configuration file we are able to allow the LR model to better classify the data.
 
 ### F.2 Decision Tree Classifier
 
-The decision tree was chosen as it would allow us to form a baseline metrics on how well basic trees can perform predictions on the dataset
+- The decision tree (DT) was chosen as it would allow us to form a baseline metrics on how well basic trees can perform predictions on the dataset.
+- DT model allows for configuration between maximum depth of tree and minimum split size of each node, as the main issue with decision trees are that they tend to overfit if allowed to grow to the maximum length.
+- By applying the different configurations and by observing the difference in the train and test set output we should find a generalized model that can best classify show/no show cases.
 
 ### F.3 Random Forest Classifier
 
-- Random Forest Model chosen over other decision tree models for example XGBoost due to the commercial nature of the question (hotel bookings)
+- Random Forest Model (RF) chosen over other decision tree models for example XGBoost due to the commercial nature of the question (hotel bookings)
 - Typically in commmercial situations, changes in data can rapid and hence needed a model that can deal with variance errors better.
 - Boosting models for eg XGBoost employs iterative strategy for adjusting an observation's weight based on the previous wrongly classified information, hence boosting models generally result in better prediction outcomes but may not always generalize well.
 - Bagging models like Random Forest Classifiers create extra data by bagging (sampling with replacement) and create multiple parallel models of which mean predictions are chosen. Bagging models hence deal better with data randomness and data variation.
@@ -168,8 +194,13 @@ The decision tree was chosen as it would allow us to form a baseline metrics on 
 Evaluation of the models developed. Any metrics used in the evaluation should also be
 explained.
 
+Impact of no show
+1. Lost of revenue when they cannot resell the room
+2. Additional costs of distribution channels by increasing commissions or paying for publicity to help sell these rooms
+3. Lowering prices last minute, so they can resell a room, resulting in reducing profit margin
+
 1. Optimize for which metrics?
-    - Should optimize for precision (i.e. Within those that we classified as no-show, how many of them are indeed no-show?)
+    - Should optimize for **precision** (i.e. Within those that we classified as no-show, how many of them are indeed no-show?)
 2. Impact of False Positive (Type 1 error)?
     - For a reputable hotel chain the cost of a type 1 error is extremely high. 
     - Customers who booked and paid deposits would be disappointed if rooms are not ready or worse no-rooms available
@@ -186,6 +217,12 @@ explained.
     - Negative impact of leaked algorithm selection might hurt the business.
 
 ---
+
+### Kudos
+
+Here are some references to industry specifc websites to understand the problem
+1. [Manuel Banza, Predicting Hotel Booking Cancellations Using Machine Learning](https://www.linkedin.com/pulse/u-hotel-booking-cancellations-using-machine-learning-manuel-banza/)
+
 
 ## Evaluation
 
