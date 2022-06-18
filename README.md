@@ -1,15 +1,15 @@
 # AIAP11 Assessment
 
-
 ## Table of Contents
- - [Candidate Information](#a-candidate-information)
- - [Folder structure](#b-folder-structure)
- - [Pipeline and Configuration](#c-instructions-for-pipeline-and-configuration)
- - [Pipeline Flow Information](#d-pipeline-flow-information)
- - [Summary of EDA](#e-summary-of-eda-findings)
- - [Model Justification](#f-justification-of-model-choice)
- - [Evaluation of Metrics](#g-evaluation-of-model-metrics)
- - [Other Considerations](#h-other-considerations)
+
+- [Candidate Information](#a-candidate-information)
+- [Folder structure](#b-folder-structure)
+- [Pipeline and Configuration](#c-instructions-for-pipeline-and-configuration)
+- [Pipeline Flow Information](#d-pipeline-flow-information)
+- [Summary of EDA](#e-summary-of-eda-findings)
+- [Model Justification](#f-justification-of-model-choice)
+- [Evaluation of Metrics](#g-evaluation-of-model-metrics)
+- [Other Considerations](#h-other-considerations)
 
 ---
 
@@ -70,7 +70,6 @@ Please execute the following steps in bash to run the run.sh file:
 ./run.sh
 ```
 
-
 ### C.2 Pipeline Configuration
 
 The model config files can be found in config.yaml within the config folder of the src. The configurable parameters are categrized into:
@@ -85,7 +84,6 @@ src
     |-- config.yaml
     `-- config_load.py
 ```
-
 
 ## D. Pipeline Flow Information
 
@@ -127,65 +125,59 @@ Preprocessing steps undertaken:
 |Negative numbers in days|checkout_day| Data entry error| Return the absolute of those days|
 |Float point numbers|num_adults, arrival_day, checkout_day, num_children| Database parsing error | Converted float to integer|
 |Currency and price in same column|price|Database planning error|Split out currency and price and converting them to SGD using an average USD to SGD conversion rate (can be configured, see [yaml](#c2-pipeline-configuration))|
-1. 
-2. Splitting the price from currency and converting them to SGD using an average USD to SGD conversion rate (can be configured, see [yaml](#c2-pipeline-configuration))
-3. "num_adults" was a freetext field, hence  (data-entry error)
-4. Several columns was saved as float in database but should have been integers 
-
 
 Feature Engineering steps undertaken:
 
-1. One Hot Encoding - shows presence of values by columns, drops first column to prevent sparese data.
-2. Ordinal Encoding:
-    - Ordinal Encoder for those without missing values.
-    - Ordinal Encoder that encodes missing as -1 (e.g. labelling as missing).
+1. One Hot Encoding - Ehows presence of values by columns, drops first column to prevent sparese data.
+2. Ordinal Encoding - Encodes the presence of values in order (e.g. 1, 2, 3, 4). Allows model to distinguish patterns between data series. In this case the ordinal encoder also encoded missing values as -1 (e.g. labelling as missing).
 3. Simple Imputer - for missing price values impute the mean price, can be configured to median.
 
 ---
 
 ## E. Summary of EDA Findings
 
-Overview of key findings from the EDA conducted in Task 1 and the choices made in the pipeline based on these findings, particularly any feature engineering. Please keep the
-details of the EDA in the `.ipynb`, this section should be a quick summary.
-
-Hence, decided to keep the following columns:
+The key findings during the EDA process is summarized into the following table:
 
 | Categories| Type| Reason|
 |---|---|---|
 | with_child | Boolean| Those with children have a 63.22% chance of no show |
 | branch | Nominal Category| High proportion of no show for specific nationalities (CN, ID, MY)|
-| country | Nominal Category| More no shows at the Changi vs Orchard Branches|
+| country | Nominal Category| More no shows at the Changi vs Orchard branch|
 | first_time | Boolean| First time customers proportion of no show at 98.75% |
 | SGD_price | Continuous Variable| Lower prices (mass market) tend to have more no shows|
 
-Checking for imbalance dataset:
+Additional Information
 
-- Dataset is not overly skewed towards either show or no show.
-- No show being around 37.04% of overall bookings.
-- Average cancellation rate on Booking.com and Expedia were 39% and 25% respectively [link](https://www.hoteliga.com/en/blog/how-to-reduce-no-shows-at-your-hotel)
+- Decided to keep the above columns within the dataset as they were most indicitive of either a show or no show.
+- Of the above columns, both "with_child" and "SGD_price" were created from "num_children" and "price" columns respectively.
+- Checking for imbalance dataset:
+  - Dataset is not overly skewed towards either show or no show.
+  - No show being around 37.04% of overall bookings.
+  - Average cancellation rate on Booking.com and Expedia ranged between 39% and 25%. [link](https://www.hoteliga.com/en/blog/how-to-reduce-no-shows-at-your-hotel)
 
 ---
 
 ## F. Justification of Model Choice
 
-### F.1 Logistic Regression
+### 1. Logistic Regression
 
 - The logistic regession model (LR) was chosen as a baseline for comparing other classification models DT and RF.
 - LR model allows for configuration between solver, penalty, c strength and iterations.
+- Linear models can improve model prediction when they are allowed to regularize parameters that might not be useful. Through this shrinkage method we can allow the model to avoid overfitting to the data.
 - By applying the different levers in configuration file we are able to allow the LR model to better classify the data.
 
-### F.2 Decision Tree Classifier
+### 2. Decision Tree Classifier
 
 - The decision tree (DT) was chosen as it would allow us to form a baseline metrics on how well basic trees can perform predictions on the dataset.
 - DT model allows for configuration between maximum depth of tree and minimum split size of each node, as the main issue with decision trees are that they tend to overfit if allowed to grow to the maximum length.
 - By applying the different configurations and by observing the difference in the train and test set output we should find a generalized model that can best classify show/no show cases.
 
-### F.3 Random Forest Classifier
+### 3. Random Forest Classifier
 
-- Random Forest Model (RF) chosen over other decision tree models for example XGBoost due to the commercial nature of the question (hotel bookings)
+- Random Forest Model (RF) chosen over other decision tree models, for example XGBoost, due to the commercial nature of the question (hotel bookings)
 - Typically in commmercial situations, changes in data can rapid and hence needed a model that can deal with variance errors better.
-- Boosting models for eg XGBoost employs iterative strategy for adjusting an observation's weight based on the previous wrongly classified information, hence boosting models generally result in better prediction outcomes but may not always generalize well.
-- Bagging models like Random Forest Classifiers create extra data by bagging (sampling with replacement) and create multiple parallel models of which mean predictions are chosen. Bagging models hence deal better with data randomness and data variation.
+- Boosting models for eg XGBoost employs iterative strategy for adjusting an observation's weight based on the previous wrongly classified information, hence boosting models generally result in better prediction outcomes, but may not always generalize well.
+- Bagging models like Random Forest Classifiers create extra data by bagging (sampling with replacement) and create multiple parallel models of which predictions are chosen via majority vote. Bagging models hence deal better with data randomness and data variation.
 
 ---
 
@@ -194,15 +186,10 @@ Checking for imbalance dataset:
 Evaluation of the models developed. Any metrics used in the evaluation should also be
 explained.
 
-Impact of no show
-1. Lost of revenue when they cannot resell the room
-2. Additional costs of distribution channels by increasing commissions or paying for publicity to help sell these rooms
-3. Lowering prices last minute, so they can resell a room, resulting in reducing profit margin
-
 1. Optimize for which metrics?
     - Should optimize for **precision** (i.e. Within those that we classified as no-show, how many of them are indeed no-show?)
 2. Impact of False Positive (Type 1 error)?
-    - For a reputable hotel chain the cost of a type 1 error is extremely high. 
+    - For a reputable hotel chain the cost of a type 1 error is extremely high.
     - Customers who booked and paid deposits would be disappointed if rooms are not ready or worse no-rooms available
 3. Impact of False Negative (Type 2 error)?
     - Cost is limited to current ops cost (cost of leaving room vacant due to no-show)  
@@ -220,15 +207,7 @@ Impact of no show
 
 ### Kudos
 
-Here are some references to industry specifc websites to understand the problem
+Here are some references to industry specifc websites I used to understand the problem better.
+
 1. [Manuel Banza, Predicting Hotel Booking Cancellations Using Machine Learning](https://www.linkedin.com/pulse/u-hotel-booking-cancellations-using-machine-learning-manuel-banza/)
-
-
-## Evaluation
-
-1. Appropriate data preprocessing and feature engineering
-2. Appropriate use and optimisation of algorithms/models
-3. Appropriate explanation for the choice of algorithms/models
-4. Appropriate use of evaluation metrics
-5. Appropriate explanation for the choice of evaluation metrics
-6. Understanding of the different components in the machine learning pipeline
+2. [Susana Castro, No-Show, Cancellations, Walk-ins and the Overbooking pain in hotels](https://revmanager.eu/cancellations-overbooking-noshow-hotels/)
