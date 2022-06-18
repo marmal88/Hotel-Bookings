@@ -25,6 +25,8 @@
 
 Overview of the submitted folder and the folder structure
 
+tree -I __pycache__
+
 ```bash
 .
 |-- README.md
@@ -33,7 +35,9 @@ Overview of the submitted folder and the folder structure
 |   `-- noshow.db
 |-- eda.ipynb
 |-- output
-|   `-- Evaluation_Metrics_2022-06-18.txt
+|   |-- Decision Tree Classifier_Evaluation_Metrics_2022-06-18-21-09-05.txt
+|   |-- Logistic Regression Classifier_Evaluation_Metrics_2022-06-18-21-09-05.txt
+|   `-- Random Forest Classifier_Evaluation_Metrics_2022-06-18-21-09-10.txt
 |-- requirements.txt
 |-- run.sh
 |-- src
@@ -45,7 +49,20 @@ Overview of the submitted folder and the folder structure
 |   |-- mlpipe.py
 |   `-- preprocess.py
 `-- tests
-    `-- test_extract.p
+    |-- artifacts
+    |   |-- X_test.csv
+    |   |-- X_train.csv
+    |   |-- ml_data.csv
+    |   |-- test_config.yaml
+    |   |-- test_no_show.csv
+    |   |-- test_no_show_drop.csv
+    |   |-- y_pred_test.csv
+    |   |-- y_pred_train.csv
+    |   |-- y_test.csv
+    |   `-- y_train.csv
+    |-- test_extract.py
+    |-- test_mlpipe.py
+    `-- test_preprocess.py
 ```
 
 ---
@@ -87,7 +104,7 @@ src
 
 ## D. Pipeline Flow Information
 
-As far as possible, the intent was to use a similar data pipeline for all three models to increase model reusability. However, during the feature engineering phase wanted to optimize for the features that can get the best results from the different models.
+As far as possible, the intent was to use a similar data pipeline for all three models to increase model reusability. However, during the feature engineering phase a similar pipeline could not be used across the different models. Hence I decided to optimize for the feature engineering steps that could get the best results from the different models.
 
 Hence, the overall pipeline was built to create a common preprocessing step while using sklearn's inbuilt pipeline to do the feature engineering. Overall pipeline is as below:
 | Step | File Location |Purpose |
@@ -130,7 +147,7 @@ Feature Engineering steps undertaken:
 
 1. One Hot Encoding - Ehows presence of values by columns, drops first column to prevent sparese data.
 2. Ordinal Encoding - Encodes the presence of values in order (e.g. 1, 2, 3, 4). Allows model to distinguish patterns between data series. In this case the ordinal encoder also encoded missing values as -1 (e.g. labelling as missing).
-3. Simple Imputer - for missing price values impute the mean price, can be configured to median.
+3. Simple Imputer - For missing price values impute the mean price, can be configured to median.
 
 ---
 
@@ -148,7 +165,7 @@ The key findings during the EDA process is summarized into the following table:
 
 Additional Information
 
-- Decided to keep the above columns within the dataset as they were most indicitive of either a show or no show.
+- Decided to keep the above columns within the dataset as they were most indicitive of either a show or no show. (Summarized in reason column on table above)
 - Of the above columns, both "with_child" and "SGD_price" were created from "num_children" and "price" columns respectively.
 - Checking for imbalance dataset:
   - Dataset is not overly skewed towards either show or no show.
@@ -183,11 +200,9 @@ Additional Information
 
 ## G. Evaluation of Model Metrics
 
-Evaluation of the models developed. Any metrics used in the evaluation should also be
-explained.
-
 1. Optimize for which metrics?
     - Should optimize for **precision** (i.e. Within those that we classified as no-show, how many of them are indeed no-show?)
+    - Impact of false positive is greater than impact of false negative.
 2. Impact of False Positive (Type 1 error)?
     - For a reputable hotel chain the cost of a type 1 error is extremely high.
     - Customers who booked and paid deposits would be disappointed if rooms are not ready or worse no-rooms available
@@ -201,7 +216,7 @@ explained.
 1. Ethical Considerations
     - Unsure whether to use country as a column even though it is somewhat predictive
     - Even if column is highly predictive, little actionable policies can be formulated
-    - Negative impact of leaked algorithm selection might hurt the business.
+    - Negative impact of leaked algorithm selection might hurt the reputation of the business, perceived as discriminatory.
 
 ---
 

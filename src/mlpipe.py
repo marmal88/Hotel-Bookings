@@ -136,8 +136,8 @@ class MLpipeline:
         # date_time_file = datetime.datetime.now().strftime("%Y-%m-%d")
         directory = "output"
         filename = model + "_Evaluation_Metrics_" + date_time + ".txt"
-        with open(os.path.join(directory, filename), "w", encoding="utf-8") as f:
-            f.write(f"\nModel Evaluation Metrics for {model} at time {date_time}")
+        with open(os.path.join(directory, filename), "w", encoding="utf-8") as files:
+            files.write(f"\nModel Evaluation Metrics for {model} at time {date_time}")
             if results:
                 tr_tn, tr_fp, tr_fn, tr_tp = confusion_matrix(
                     y_train, y_pred_train
@@ -146,23 +146,23 @@ class MLpipeline:
                 train_prec = (tr_tp / (tr_tp + tr_fp)) * 100
                 train_recall = (tr_tp / (tr_tp + tr_fn)) * 100
                 train_f1 = (2 * train_prec * train_recall) / (train_prec + train_recall)
-                f.write(f"\n{model} Train Set Model Metrics")
-                f.write(f"\nTrain Set Precision {train_prec:.2f}%")
-                f.write(f"\nTrain Set Accuracy {train_acc:.2f}%")
-                f.write(f"\nTrain Set Recall {train_recall:.2f}%")
-                f.write(f"\nTrain Set F1-Score {train_f1:.2f}%")
+                files.write(f"\n{model} Train Set Model Metrics")
+                files.write(f"\nTrain Set Precision {train_prec:.2f}%")
+                files.write(f"\nTrain Set Accuracy {train_acc:.2f}%")
+                files.write(f"\nTrain Set Recall {train_recall:.2f}%")
+                files.write(f"\nTrain Set F1-Score {train_f1:.2f}%")
 
             t_tn, t_fp, t_fn, t_tp = confusion_matrix(y_test, y_pred_test).ravel()
             test_acc = ((t_tp + t_tn) / (t_tn + t_fp + t_fn + t_tp)) * 100
             test_prec = (t_tp / (t_tp + t_fp)) * 100
             test_recall = (t_tp / (t_tp + t_fn)) * 100
             test_f1 = (2 * test_prec * test_recall) / (test_prec + test_recall)
-            f.write(f"\n{model} Test Set Model Metrics")
-            f.write(f"\nTest Set Precision {test_prec:.2f}%")
-            f.write(f"\nTest Set Accuracy {test_acc:.2f}%")
-            f.write(f"\nTest Set Recall {test_recall:.2f}%")
-            f.write(f"\nTest Set F1-Score {test_f1:.2f}%")
+            files.write(f"\n{model} Test Set Model Metrics")
+            files.write(f"\nTest Set Precision {test_prec:.2f}%")
+            files.write(f"\nTest Set Accuracy {test_acc:.2f}%")
+            files.write(f"\nTest Set Recall {test_recall:.2f}%")
+            files.write(f"\nTest Set F1-Score {test_f1:.2f}%")
 
             if classreport:
-                f.write(f"\n{classification_report(y_train, y_pred_train)}")
-                f.write(f"\n{classification_report(y_test, y_pred_test)}")
+                files.write(f"\n{classification_report(y_train, y_pred_train)}")
+                files.write(f"\n{classification_report(y_test, y_pred_test)}")

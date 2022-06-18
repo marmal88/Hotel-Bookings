@@ -15,11 +15,13 @@ def fixture_preprocess():
     """
     yield Preprocess()
 
+
 def test_preprocess_df(fixture_preprocess):
     pass
 
+
 def test__split_price(fixture_preprocess):
-    pass
-    # input_price = ["None", np.nan, "SGD$ 75.25", "USD$ 43.00"]
-    # expected = [np.nan, np.nan, float(75.25), float(43.25)]
-    # assert fixture_preprocess()._split_price(input_price) == expected
+    input_price = ["None", np.nan, "SGD$ 14.55", "USD$ 14.00"]
+    expected = [np.nan, np.nan, float(14.55), float(14)]
+    out = fixture_preprocess()._split_price(input_price)
+    print(out)
