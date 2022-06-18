@@ -127,14 +127,16 @@ class MLpipeline:
             model (string): Name of model executed
             y_test (series): Series of actual test values by the model
             y_pred_test (series): Series of predicted values by the model
+            y_train (series): Series of actual train values by the model
+            y_pred_train (series): Series of predicted train values by the model
         """
         results = self.config["mlpipeline"]["results"]
         classreport = self.config["mlpipeline"]["class_report"]
-        date_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        date_time_file = datetime.datetime.now().strftime("%Y-%m-%d")
+        date_time = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        # date_time_file = datetime.datetime.now().strftime("%Y-%m-%d")
         directory = "output"
-        filename = "Evaluation_Metrics_" + date_time_file + ".txt"
-        with open(os.path.join(directory, filename), "a", encoding="utf-8") as f:
+        filename = model + "_Evaluation_Metrics_" + date_time + ".txt"
+        with open(os.path.join(directory, filename), "w", encoding="utf-8") as f:
             f.write(f"\nModel Evaluation Metrics for {model} at time {date_time}")
             if results:
                 tr_tn, tr_fp, tr_fn, tr_tp = confusion_matrix(

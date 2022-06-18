@@ -12,7 +12,7 @@ def fixture_extract():
     """
     config = read_yaml_file()
     data_location = config["data"]["data_location"]
-    return ImportData(data_location)
+    yield ImportData(data_location)
 
 def test_dataframe(fixture_extract):
     """Testing to see if return is indeed dataframe object type
