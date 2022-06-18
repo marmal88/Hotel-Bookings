@@ -1,0 +1,5 @@
+booking_id,no_show,branch,booking_month,arrival_month,arrival_day,checkout_month,checkout_day,country,first_time,room,price,platform,num_adults,num_children,currency,with_child
+94113,TRUE,Changi,July,May,19,May,20,China,TRUE,King,,Email,2,1,,TRUE
+86543,FALSE,Orchard,December,February,28,March,4,India,TRUE,,723.34,Email,1,0,USD,FALSE
+75928,FALSE,Orchard,December,May,22,May,24,Australia,TRUE,Single,650.94,Website,1,0,SGD,FALSE
+66947,FALSE,Orchard,October,September,2,September,4,China,TRUE,,978.67,Agent,1,1,SGD,TRUE

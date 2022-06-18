@@ -1,0 +1,40 @@
+# This test config file unchanged since 18/6/2022
+data:
+  data_location: data/noshow.db
+  data_table: noshow
+preprocess:
+  int_cols: ["num_adults", "arrival_day", "checkout_day", "num_children"]
+  bins: 5
+  labels: ["Lowest", "Lower", "Middle" ,"Upper", "High"]
+  exchange: 1.3439
+feature_eng:
+  ohe1: ["branch", "country", "first_time"]
+  ore1: []
+  sim1: ["SGD_price"]
+  ore2: ["branch", "country", "first_time"]
+  sim2: ["SGD_price"]
+  strategy: "mean"
+mlpipeline:
+  dependent_y: no_show
+  drop: ["booking_id", "booking_month", "arrival_month", "arrival_day", "checkout_month", "checkout_day" , "price", "platform", "num_adults", "num_children", "currency", "price_types", "room"]
+  results: True
+  class_report: False
+  lr:
+    name: "Logistic Regression Classifier"
+    params:
+      penalty: "l1"
+      solver: "liblinear"
+      max_iter: 100
+      c: 0.1
+  dt:
+    name: "Decision Tree Classifier"
+    params:
+      max_depth: 20
+      min_samples_split: 4
+  rf:
+    name: "Random Forest Classifier"
+    params:
+      n_estimators: 150
+      max_depth: 3
+      min_samples_split: 4
+
