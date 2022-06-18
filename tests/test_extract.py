@@ -1,6 +1,7 @@
 import pandas as pd
 import pytest
 
+# pylint: skip-file
 from src.config.config_load import read_yaml_file
 from src.extract import ImportData
 
