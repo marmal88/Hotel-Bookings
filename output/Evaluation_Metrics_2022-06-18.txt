@@ -1,0 +1,166 @@
+
+Model Evaluation Metrics for Logistic Regression Classifier at time 2022-06-18 17:16:33
+Logistic Regression Classifier Train Set Model Metrics
+Train Set Precision 66.68%
+Train Set Accuracy 71.36%
+Train Set Recall 45.61%
+Train Set F1-Score 54.17%
+Logistic Regression Classifier Test Set Model Metrics
+Test Set Precision 66.82%
+Test Set Accuracy 71.43%
+Test Set Recall 44.73%
+Test Set F1-Score 53.59%
+Model Evaluation Metrics for Decision Tree Classifier at time 2022-06-18 17:16:33
+Decision Tree Classifier Train Set Model Metrics
+Train Set Precision 59.71%
+Train Set Accuracy 70.28%
+Train Set Recall 61.25%
+Train Set F1-Score 60.47%
+Decision Tree Classifier Test Set Model Metrics
+Test Set Precision 59.12%
+Test Set Accuracy 70.01%
+Test Set Recall 60.54%
+Test Set F1-Score 59.82%
+Model Evaluation Metrics for Random Forest Classifier at time 2022-06-18 17:16:38
+Random Forest Classifier Train Set Model Metrics
+Train Set Precision 67.30%
+Train Set Accuracy 71.42%
+Train Set Recall 44.72%
+Train Set F1-Score 53.73%
+Random Forest Classifier Test Set Model Metrics
+Test Set Precision 67.38%
+Test Set Accuracy 71.46%
+Test Set Recall 43.84%
+Test Set F1-Score 53.12%
+Model Evaluation Metrics for Logistic Regression Classifier at time 2022-06-18 17:35:57
+Logistic Regression Classifier Train Set Model Metrics
+Train Set Precision 66.68%
+Train Set Accuracy 71.36%
+Train Set Recall 45.61%
+Train Set F1-Score 54.17%
+Logistic Regression Classifier Test Set Model Metrics
+Test Set Precision 66.82%
+Test Set Accuracy 71.43%
+Test Set Recall 44.73%
+Test Set F1-Score 53.59%
+Model Evaluation Metrics for Decision Tree Classifier at time 2022-06-18 17:35:57
+Decision Tree Classifier Train Set Model Metrics
+Train Set Precision 59.71%
+Train Set Accuracy 70.28%
+Train Set Recall 61.25%
+Train Set F1-Score 60.47%
+Decision Tree Classifier Test Set Model Metrics
+Test Set Precision 59.12%
+Test Set Accuracy 70.01%
+Test Set Recall 60.54%
+Test Set F1-Score 59.82%
+Model Evaluation Metrics for Random Forest Classifier at time 2022-06-18 17:36:02
+Random Forest Classifier Train Set Model Metrics
+Train Set Precision 67.30%
+Train Set Accuracy 71.42%
+Train Set Recall 44.72%
+Train Set F1-Score 53.73%
+Random Forest Classifier Test Set Model Metrics
+Test Set Precision 67.38%
+Test Set Accuracy 71.46%
+Test Set Recall 43.84%
+Test Set F1-Score 53.12%
+Model Evaluation Metrics for Logistic Regression Classifier at time 2022-06-18 17:53:33
+Logistic Regression Classifier Train Set Model Metrics
+Train Set Precision 66.68%
+Train Set Accuracy 71.36%
+Train Set Recall 45.61%
+Train Set F1-Score 54.17%
+Logistic Regression Classifier Test Set Model Metrics
+Test Set Precision 66.82%
+Test Set Accuracy 71.43%
+Test Set Recall 44.73%
+Test Set F1-Score 53.59%
+Model Evaluation Metrics for Decision Tree Classifier at time 2022-06-18 17:53:33
+Decision Tree Classifier Train Set Model Metrics
+Train Set Precision 59.71%
+Train Set Accuracy 70.28%
+Train Set Recall 61.25%
+Train Set F1-Score 60.47%
+Decision Tree Classifier Test Set Model Metrics
+Test Set Precision 59.12%
+Test Set Accuracy 70.01%
+Test Set Recall 60.54%
+Test Set F1-Score 59.82%
+Model Evaluation Metrics for Random Forest Classifier at time 2022-06-18 17:53:38
+Random Forest Classifier Train Set Model Metrics
+Train Set Precision 67.30%
+Train Set Accuracy 71.42%
+Train Set Recall 44.72%
+Train Set F1-Score 53.73%
+Random Forest Classifier Test Set Model Metrics
+Test Set Precision 67.38%
+Test Set Accuracy 71.46%
+Test Set Recall 43.84%
+Test Set F1-Score 53.12%
+Model Evaluation Metrics for Logistic Regression Classifier at time 2022-06-18 17:55:05
+Logistic Regression Classifier Train Set Model Metrics
+Train Set Precision 66.68%
+Train Set Accuracy 71.36%
+Train Set Recall 45.61%
+Train Set F1-Score 54.17%
+Logistic Regression Classifier Test Set Model Metrics
+Test Set Precision 66.82%
+Test Set Accuracy 71.43%
+Test Set Recall 44.73%
+Test Set F1-Score 53.59%
+Model Evaluation Metrics for Decision Tree Classifier at time 2022-06-18 17:55:05
+Decision Tree Classifier Train Set Model Metrics
+Train Set Precision 59.71%
+Train Set Accuracy 70.28%
+Train Set Recall 61.25%
+Train Set F1-Score 60.47%
+Decision Tree Classifier Test Set Model Metrics
+Test Set Precision 59.12%
+Test Set Accuracy 70.01%
+Test Set Recall 60.54%
+Test Set F1-Score 59.82%
+Model Evaluation Metrics for Random Forest Classifier at time 2022-06-18 17:55:10
+Random Forest Classifier Train Set Model Metrics
+Train Set Precision 67.30%
+Train Set Accuracy 71.42%
+Train Set Recall 44.72%
+Train Set F1-Score 53.73%
+Random Forest Classifier Test Set Model Metrics
+Test Set Precision 67.38%
+Test Set Accuracy 71.46%
+Test Set Recall 43.84%
+Test Set F1-Score 53.12%
+Model Evaluation Metrics for Logistic Regression Classifier at time 2022-06-18 17:55:42
+Logistic Regression Classifier Train Set Model Metrics
+Train Set Precision 66.68%
+Train Set Accuracy 71.36%
+Train Set Recall 45.61%
+Train Set F1-Score 54.17%
+Logistic Regression Classifier Test Set Model Metrics
+Test Set Precision 66.82%
+Test Set Accuracy 71.43%
+Test Set Recall 44.73%
+Test Set F1-Score 53.59%
+Model Evaluation Metrics for Decision Tree Classifier at time 2022-06-18 17:55:43
+Decision Tree Classifier Train Set Model Metrics
+Train Set Precision 59.71%
+Train Set Accuracy 70.28%
+Train Set Recall 61.25%
+Train Set F1-Score 60.47%
+Decision Tree Classifier Test Set Model Metrics
+Test Set Precision 59.12%
+Test Set Accuracy 70.01%
+Test Set Recall 60.54%
+Test Set F1-Score 59.82%
+Model Evaluation Metrics for Random Forest Classifier at time 2022-06-18 17:55:47
+Random Forest Classifier Train Set Model Metrics
+Train Set Precision 67.30%
+Train Set Accuracy 71.42%
+Train Set Recall 44.72%
+Train Set F1-Score 53.73%
+Random Forest Classifier Test Set Model Metrics
+Test Set Precision 67.38%
+Test Set Accuracy 71.46%
+Test Set Recall 43.84%
+Test Set F1-Score 53.12%

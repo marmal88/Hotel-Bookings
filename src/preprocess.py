@@ -1,23 +1,25 @@
 import pandas as pd
 import numpy as np
 
-from extract import ImportData
-from config.config_load import read_yaml_file
+from src.extract import ImportData
+from src.config.config_load import read_yaml_file
 
 
 class Preprocess:
-    """Class that wraps the preprocesing pipeline before handover to Machine Learning Pipeline"""
-
+    """Class that wraps the preprocesing pipeline before handover to Machine Learning Pipeline
+    """
     def __init__(self):
         """Instantiate preprocessing object and load data
+        Args:
+            config (yaml): config yaml file
         """
-        config = read_yaml_file()
-        self.data_location = config["data"]["data_location"]
-        self.data_table = config["data"]["data_table"]
-        self.int_cols = config["preprocess"]["int_cols"]
-        self.exchange = config["preprocess"]["exchange"]
-        self.bins = config["preprocess"]["bins"]
-        self.labels = config["preprocess"]["labels"]
+        self.config = read_yaml_file()
+        self.data_location = self.config["data"]["data_location"]
+        self.data_table = self.config["data"]["data_table"]
+        self.int_cols = self.config["preprocess"]["int_cols"]
+        self.exchange = self.config["preprocess"]["exchange"]
+        self.bins = self.config["preprocess"]["bins"]
+        self.labels = self.config["preprocess"]["labels"]
         self.data = ImportData(self.data_location).return_table(self.data_table)
 
     def preprocess_df(self):

@@ -1,4 +1,5 @@
 import datetime
+import os
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
@@ -10,7 +11,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import confusion_matrix, classification_report
 
-from config.config_load import read_yaml_file
+from src.config.config_load import read_yaml_file
 
 
 class MLpipeline:
@@ -19,6 +20,8 @@ class MLpipeline:
 
     def __init__(self):
         """Instantiate MLpipeline object and load data
+        Args:
+            config (yaml): config yaml file
         """
         self.config = read_yaml_file()
         self.dependent_y = self.config["mlpipeline"]["dependent_y"]
@@ -42,8 +45,13 @@ class MLpipeline:
                 penalty = self.config["mlpipeline"]["lr"]["params"]["penalty"]
                 solver = self.config["mlpipeline"]["lr"]["params"]["solver"]
                 max_iter = self.config["mlpipeline"]["lr"]["params"]["max_iter"]
+                c_strength = self.config["mlpipeline"]["lr"]["params"]["c"]
                 model_obj = LogisticRegression(
-                    penalty=penalty, solver=solver, max_iter=max_iter
+                    penalty=penalty,
+                    solver=solver,
+                    max_iter=max_iter,
+                    C=c_strength,
+                    random_state=11
                 )
             elif model == "dt":
                 model_name = self.config["mlpipeline"]["dt"]["name"]
@@ -52,7 +60,9 @@ class MLpipeline:
                     "min_samples_split"
                 ]
                 model_obj = DecisionTreeClassifier(
-                    max_depth=max_depth, min_samples_split=min_samples_split
+                    max_depth=max_depth,
+                    min_samples_split=min_samples_split,
+                    random_state=11,
                 )
             elif model == "rf":
                 model_name = self.config["mlpipeline"]["rf"]["name"]
@@ -65,6 +75,7 @@ class MLpipeline:
                     n_estimators=n_estimators,
                     max_depth=max_depth,
                     min_samples_split=min_samples_split,
+                    random_state=11,
                 )
             else:
                 print("Invalid model, please check if model exists in config")
@@ -91,9 +102,7 @@ class MLpipeline:
         pipe.fit(X_train, y_train)
         y_pred_train = pipe.predict(X_train)
         y_pred_test = pipe.predict(X_test)
-        MLpipeline().metrics(
-            model_name, y_test, y_pred_test, y_train, y_pred_train
-        )
+        MLpipeline().metrics(model_name, y_test, y_pred_test, y_train, y_pred_train)
 
     def model_split(self, data):
         """Splits the data into training and testing sets
@@ -108,7 +117,7 @@ class MLpipeline:
         X = data.drop(columns=self.dependent_y)
         y = data[self.dependent_y]
         X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.3, random_state=42
+            X, y, test_size=0.3, random_state=11
         )
         return X_train, X_test, y_train, y_test
 
@@ -122,30 +131,36 @@ class MLpipeline:
         results = self.config["mlpipeline"]["results"]
         classreport = self.config["mlpipeline"]["class_report"]
         date_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        print(f"Model Evaluation Metrics for {model} at time {date_time}")
-        if results:
-            tr_tn, tr_fp, tr_fn, tr_tp = confusion_matrix(y_train, y_pred_train).ravel()
-            train_acc = ((tr_tp + tr_tn) / (tr_tn + tr_fp + tr_fn + tr_tp)) * 100
-            train_prec = (tr_tp / (tr_tp + tr_fp)) * 100
-            train_recall = (tr_tp / (tr_tp + tr_fn)) * 100
-            train_f1 = (2 * train_prec * train_recall) / (train_prec + train_recall)
-            print(f"{model} Train Set Model Metrics")
-            print(f"Train Set Precision {train_prec:.2f}%")
-            print(f"Train Set Accuracy {train_acc:.2f}%")
-            print(f"Train Set Recall {train_recall:.2f}%")
-            print(f"Train Set F1-Score {train_f1:.2f}%")
+        date_time_file = datetime.datetime.now().strftime("%Y-%m-%d")
+        directory = "output"
+        filename = "Evaluation_Metrics_" + date_time_file + ".txt"
+        with open(os.path.join(directory, filename), "a", encoding="utf-8") as f:
+            f.write(f"\nModel Evaluation Metrics for {model} at time {date_time}")
+            if results:
+                tr_tn, tr_fp, tr_fn, tr_tp = confusion_matrix(
+                    y_train, y_pred_train
+                ).ravel()
+                train_acc = ((tr_tp + tr_tn) / (tr_tn + tr_fp + tr_fn + tr_tp)) * 100
+                train_prec = (tr_tp / (tr_tp + tr_fp)) * 100
+                train_recall = (tr_tp / (tr_tp + tr_fn)) * 100
+                train_f1 = (2 * train_prec * train_recall) / (train_prec + train_recall)
+                f.write(f"\n{model} Train Set Model Metrics")
+                f.write(f"\nTrain Set Precision {train_prec:.2f}%")
+                f.write(f"\nTrain Set Accuracy {train_acc:.2f}%")
+                f.write(f"\nTrain Set Recall {train_recall:.2f}%")
+                f.write(f"\nTrain Set F1-Score {train_f1:.2f}%")
 
-        t_tn, t_fp, t_fn, t_tp = confusion_matrix(y_test, y_pred_test).ravel()
-        test_acc = ((t_tp + t_tn) / (t_tn + t_fp + t_fn + t_tp)) * 100
-        test_prec = (t_tp / (t_tp + t_fp)) * 100
-        test_recall = (t_tp / (t_tp + t_fn)) * 100
-        test_f1 = (2 * test_prec * test_recall) / (test_prec + test_recall)
-        print(f"{model} Test Set Model Metrics")
-        print(f"Test Set Precision {test_prec:.2f}%")
-        print(f"Test Set Accuracy {test_acc:.2f}%")
-        print(f"Test Set Recall {test_recall:.2f}%")
-        print(f"Test Set F1-Score {test_f1:.2f}%")
+            t_tn, t_fp, t_fn, t_tp = confusion_matrix(y_test, y_pred_test).ravel()
+            test_acc = ((t_tp + t_tn) / (t_tn + t_fp + t_fn + t_tp)) * 100
+            test_prec = (t_tp / (t_tp + t_fp)) * 100
+            test_recall = (t_tp / (t_tp + t_fn)) * 100
+            test_f1 = (2 * test_prec * test_recall) / (test_prec + test_recall)
+            f.write(f"\n{model} Test Set Model Metrics")
+            f.write(f"\nTest Set Precision {test_prec:.2f}%")
+            f.write(f"\nTest Set Accuracy {test_acc:.2f}%")
+            f.write(f"\nTest Set Recall {test_recall:.2f}%")
+            f.write(f"\nTest Set F1-Score {test_f1:.2f}%")
 
-        if classreport:
-            print(classification_report(y_train, y_pred_train))
-            print(classification_report(y_test, y_pred_test))
+            if classreport:
+                f.write(f"\n{classification_report(y_train, y_pred_train)}")
+                f.write(f"\n{classification_report(y_test, y_pred_test)}")
