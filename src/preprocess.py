@@ -8,6 +8,7 @@ from src.config.config_load import read_yaml_file
 class Preprocess:
     """Class that wraps the preprocesing pipeline before handover to Machine Learning Pipeline
     """
+
     def __init__(self):
         """Instantiate preprocessing object and load data
         Args:

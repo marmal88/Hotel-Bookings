@@ -5,6 +5,7 @@ from sqlalchemy import select, text, create_engine
 class ImportData:
     """Class to encapsulate sql query responses, parse and return dataframes
     """
+
     def __init__(self, data_location):
         """instantiate object to connect to sql engine
         Args:

@@ -51,7 +51,7 @@ class MLpipeline:
                     solver=solver,
                     max_iter=max_iter,
                     C=c_strength,
-                    random_state=11
+                    random_state=11,
                 )
             elif model == "dt":
                 model_name = self.config["mlpipeline"]["dt"]["name"]
