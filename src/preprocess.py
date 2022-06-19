@@ -5,7 +5,7 @@ from src.extract import ImportData
 from src.config.config_load import read_yaml_file
 
 
-class Preprocess:
+class Preprocesor:
     """Class that wraps the preprocesing pipeline before handover to Machine Learning Pipeline
     """
 
@@ -73,12 +73,22 @@ class Preprocess:
         Returns:
             num: numerical version of string integer
         """
+        num_dict = {
+            "one": 1,
+            "two": 2,
+            "three": 3,
+            "four": 4,
+            "five": 5,
+            "six": 6,
+            "seven": 7,
+            "eight": 8,
+            "nine": 9,
+            "ten": 10,
+        }
         if num is None:
             return np.nan
-        elif num == "one":
-            return int(1)
-        elif num == "two":
-            return int(2)
+        elif num in num_dict.keys():
+            return int(num_dict[num])
         else:
             return int(num)
 

@@ -8,8 +8,8 @@ from src.extract import ImportData
 
 @pytest.fixture(name="fixture_extract")
 def fixture_extract():
-    """Pytest fixture for ImportData Object
-    Returns:
+    """ Pytest fixture for ImportData Object
+    Yields:
         fixture_extract (object): returns ImportData object
     """
     config = read_yaml_file()
@@ -18,9 +18,7 @@ def fixture_extract():
 
 
 def test_dataframe(fixture_extract):
-    """Testing to see if return is indeed dataframe object type
-    Args:
-        fixture_extract (object): ImportData object
+    """ Testing to see if return is indeed dataframe object type
     """
     config = read_yaml_file()
     data_table = config["data"]["data_table"]

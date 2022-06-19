@@ -132,7 +132,7 @@ class MLpipeline:
         """
         results = self.config["mlpipeline"]["results"]
         classreport = self.config["mlpipeline"]["class_report"]
-        date_time = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        date_time = datetime.datetime.now().strftime("%Y-%m-%d-H%H-M%M-S%S")
         # date_time_file = datetime.datetime.now().strftime("%Y-%m-%d")
         directory = "output"
         filename = model + "_Evaluation_Metrics_" + date_time + ".txt"
@@ -151,6 +151,8 @@ class MLpipeline:
                 files.write(f"\nTrain Set Accuracy {train_acc:.2f}%")
                 files.write(f"\nTrain Set Recall {train_recall:.2f}%")
                 files.write(f"\nTrain Set F1-Score {train_f1:.2f}%")
+            if classreport:
+                files.write(f"\n{classification_report(y_train, y_pred_train)}")
 
             t_tn, t_fp, t_fn, t_tp = confusion_matrix(y_test, y_pred_test).ravel()
             test_acc = ((t_tp + t_tn) / (t_tn + t_fp + t_fn + t_tp)) * 100
@@ -164,5 +166,4 @@ class MLpipeline:
             files.write(f"\nTest Set F1-Score {test_f1:.2f}%")
 
             if classreport:
-                files.write(f"\n{classification_report(y_train, y_pred_train)}")
                 files.write(f"\n{classification_report(y_test, y_pred_test)}")

@@ -1,0 +1,29 @@
+
+Model Evaluation Metrics for Random Forest Classifier at time 2022-06-19-H10-M33-S01
+Random Forest Classifier Train Set Model Metrics
+Train Set Precision 67.30%
+Train Set Accuracy 71.42%
+Train Set Recall 44.72%
+Train Set F1-Score 53.73%
+              precision    recall  f1-score   support
+
+       False       0.73      0.87      0.79     52558
+        True       0.67      0.45      0.54     31015
+
+    accuracy                           0.71     83573
+   macro avg       0.70      0.66      0.67     83573
+weighted avg       0.71      0.71      0.70     83573
+
+Random Forest Classifier Test Set Model Metrics
+Test Set Precision 67.38%
+Test Set Accuracy 71.46%
+Test Set Recall 43.84%
+Test Set F1-Score 53.12%
+              precision    recall  f1-score   support
+
+       False       0.73      0.88      0.79     22608
+        True       0.67      0.44      0.53     13209
+
+    accuracy                           0.71     35817
+   macro avg       0.70      0.66      0.66     35817
+weighted avg       0.71      0.71      0.70     35817

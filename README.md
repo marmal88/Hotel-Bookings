@@ -136,9 +136,9 @@ Preprocessing steps undertaken:
 | Errors | Columns | Error Type (Assumption) | Treatment |
 |---|---|---|---|
 |Empty rows| All columns| Database parsing error | Removal of empty rows |
-|Free text error |num_adults| Data entry error| Changed [1,2,"one", "two"] within series into [1,2]|
+|Free text error |num_adults| Data entry error| Allow for up to 10 people in a presidential suite. [ref](https://www.suiteness.com/blog/connecting-suites-suites-different-rooms)|
 |Boolean|first_time, no_show| Type error | Converted float to boolean|
-|Free text error|checkout_month| Data entry error| Changed to title case|
+|Free text error|arrival_month| Data entry error| Changed to title case|
 |Negative numbers in days|checkout_day| Data entry error| Return the absolute of those days|
 |Float point numbers|num_adults, arrival_day, checkout_day, num_children| Database parsing error | Converted float to integer|
 |Currency and price in same column|price|Database planning error|Split out currency and price and converting them to SGD using an average USD to SGD conversion rate (can be configured, see [yaml](#c2-pipeline-configuration))|
@@ -200,9 +200,16 @@ Additional Information
 
 ## G. Evaluation of Model Metrics
 
+Assumptions of Task: Formulate policies to reduce expenses incurred due to No-Shows. Some of the policies created might include:
+
+| Proposal| Cost savings |Drawbacks|
+|---|---|---|
+|Lower prioritzation of clean up for high potential no show rooms| Lesser overall housekeeping resources used| Delayed guest experience during check-in period|
+|Double book proportion of rooms with high potential to no-show| Possible extra revenue from new bookings| Potential disapointment from guest who do indeed show up (false positive)|
+
 1. Optimize for which metrics?
     - Should optimize for **precision** (i.e. Within those that we classified as no-show, how many of them are indeed no-show?)
-    - Impact of false positive is greater than impact of false negative.
+    - Cost of false positive (reputation damage) is greater than impact of false negative (lost sales).
 2. Impact of False Positive (Type 1 error)?
     - For a reputable hotel chain the cost of a type 1 error is extremely high.
     - Customers who booked and paid deposits would be disappointed if rooms are not ready or worse no-rooms available

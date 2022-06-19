@@ -8,8 +8,8 @@ preprocess:
   labels: ["Lowest", "Lower", "Middle" ,"Upper", "High"]
   exchange: 1.3439
 feature_eng:
-  ohe1: ["branch", "country", "first_time"]
-  ore1: []
+  ohe1: ["branch", "first_time"]
+  ore1: ["country"]
   sim1: ["SGD_price"]
   ore2: ["branch", "country", "first_time"]
   sim2: ["SGD_price"]

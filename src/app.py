@@ -1,8 +1,8 @@
-from src.preprocess import Preprocess
+from src.preprocess import Preprocesor
 from src.mlpipe import MLpipeline
 
 if __name__ == "__main__":
-    df = Preprocess().preprocess_df()
+    df = Preprocesor().preprocess_df()
     MLpipeline().ml_workflow(df, "lr")
     MLpipeline().ml_workflow(df, "dt")
     MLpipeline().ml_workflow(df, "rf")
