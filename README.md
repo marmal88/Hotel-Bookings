@@ -25,8 +25,6 @@
 
 Overview of the submitted folder and the folder structure
 
-tree -I __pycache__
-
 ```bash
 .
 |-- README.md
@@ -35,9 +33,9 @@ tree -I __pycache__
 |   `-- noshow.db
 |-- eda.ipynb
 |-- output
-|   |-- Decision Tree Classifier_Evaluation_Metrics_2022-06-18-21-09-05.txt
-|   |-- Logistic Regression Classifier_Evaluation_Metrics_2022-06-18-21-09-05.txt
-|   `-- Random Forest Classifier_Evaluation_Metrics_2022-06-18-21-09-10.txt
+|   |-- Decision Tree Classifier_Evaluation_Metrics_2022-06-19-H10-M32-S55.txt
+|   |-- Logistic Regression Classifier_Evaluation_Metrics_2022-06-19-H10-M32-S55.txt
+|   `-- Random Forest Classifier_Evaluation_Metrics_2022-06-19-H10-M33-S01.txt
 |-- requirements.txt
 |-- run.sh
 |-- src
@@ -53,9 +51,7 @@ tree -I __pycache__
     |   |-- X_test.csv
     |   |-- X_train.csv
     |   |-- ml_data.csv
-    |   |-- test_config.yaml
-    |   |-- test_no_show.csv
-    |   |-- test_no_show_drop.csv
+    |   |-- processed_df.csv
     |   |-- y_pred_test.csv
     |   |-- y_pred_train.csv
     |   |-- y_test.csv
@@ -91,7 +87,7 @@ Please execute the following steps in bash to run the run.sh file:
 
 The model config files can be found in config.yaml within the config folder of the src. The configurable parameters are categrized into:
 
- 1. Data Location and table names
+ 1. Data location and table names
  2. Preprocess parameters
  3. Model parameters
 
@@ -104,7 +100,7 @@ src
 
 ## D. Pipeline Flow Information
 
-As far as possible, the intent was to use a similar data pipeline for all three models to increase model reusability. However, during the feature engineering phase a similar pipeline could not be used across the different models. Hence I decided to optimize for the feature engineering steps that could get the best results from the different models.
+As far as possible, the intent was to use a similar data pipeline for all three models to increase pipeline reusability, and to serve as a common baseline to compare the different models. However, during the feature engineering phase a similar pipeline across the three different models would have had higher computational cost (e.g. tree models need to work harder when computing sparse data). Hence I decided to optimize for the feature engineering steps that could get the best results in terms of both evaluation metrics and time from the different models.
 
 Hence, the overall pipeline was built to create a common preprocessing step while using sklearn's inbuilt pipeline to do the feature engineering. Overall pipeline is as below:
 | Step | File Location |Purpose |
@@ -136,7 +132,7 @@ Preprocessing steps undertaken:
 | Errors | Columns | Error Type (Assumption) | Treatment |
 |---|---|---|---|
 |Empty rows| All columns| Database parsing error | Removal of empty rows |
-|Free text error |num_adults| Data entry error| Allow for up to 10 people in a presidential suite. [ref](https://www.suiteness.com/blog/connecting-suites-suites-different-rooms)|
+|Free text error |num_adults| Data entry error| Converted text and numbers into numbers. Allow for up to 10 people in a presidential suite. [ref](https://www.suiteness.com/blog/connecting-suites-suites-different-rooms)|
 |Boolean|first_time, no_show| Type error | Converted float to boolean|
 |Free text error|arrival_month| Data entry error| Changed to title case|
 |Negative numbers in days|checkout_day| Data entry error| Return the absolute of those days|
@@ -145,7 +141,7 @@ Preprocessing steps undertaken:
 
 Feature Engineering steps undertaken:
 
-1. One Hot Encoding - Ehows presence of values by columns, drops first column to prevent sparese data.
+1. One Hot Encoding - Ehows presence of values by columns, drops first column to prevent sparse data.
 2. Ordinal Encoding - Encodes the presence of values in order (e.g. 1, 2, 3, 4). Allows model to distinguish patterns between data series. In this case the ordinal encoder also encoded missing values as -1 (e.g. labelling as missing).
 3. Simple Imputer - For missing price values impute the mean price, can be configured to median.
 
@@ -200,12 +196,12 @@ Additional Information
 
 ## G. Evaluation of Model Metrics
 
-Assumptions of Task: Formulate policies to reduce expenses incurred due to No-Shows. Some of the policies created might include:
+Task: Formulate policies to reduce expenses incurred due to No-Shows. Some of the policies created might include:
 
-| Proposal| Cost savings |Drawbacks|
+| Policy Proposals | Cost savings | Drawbacks |
 |---|---|---|
 |Lower prioritzation of clean up for high potential no show rooms| Lesser overall housekeeping resources used| Delayed guest experience during check-in period|
-|Double book proportion of rooms with high potential to no-show| Possible extra revenue from new bookings| Potential disapointment from guest who do indeed show up (false positive)|
+|Double book a proportion of rooms with high potential to no-show| Possible extra revenue from new bookings| Potential disapointment from guest who do indeed show up (false positive)|
 
 1. Optimize for which metrics?
     - Should optimize for **precision** (i.e. Within those that we classified as no-show, how many of them are indeed no-show?)
