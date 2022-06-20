@@ -11,8 +11,6 @@ class Preprocesor:
 
     def __init__(self):
         """Instantiate preprocessing object and load data
-        Args:
-            config (yaml): config yaml file
         """
         self.config = read_yaml_file()
         self.data_location = self.config["data"]["data_location"]
@@ -26,7 +24,7 @@ class Preprocesor:
     def preprocess_df(self):
         """Main pipeline for preprocessing steps
         Returns:
-            df: data frame after preprocessing steps taken
+            df (dataframe): data frame after preprocessing steps taken
         """
         if self.data is not None:
             self.data = self.data.set_index("booking_id")
@@ -60,7 +58,7 @@ class Preprocesor:
         Args:
             price (string): price with full currency and price
         Returns:
-            price: float point price
+            price (float): float point price
         """
         if price == "None" or price is None:
             return np.nan
@@ -71,7 +69,7 @@ class Preprocesor:
         Args:
             num (string): string version of integer
         Returns:
-            num: numerical version of string integer
+            num (integer): numerical version of string integer
         """
         num_dict = {
             "one": 1,
@@ -95,9 +93,9 @@ class Preprocesor:
     def _to_bool(self, non_bool):
         """Change from Non Boolean to Boolean values
         Args:
-            non_bool: can either be 1 or "Yes"
+            non_bool (string): can either be 1 or "Yes"
         Returns:
-            non_bool: boolean version of string
+            non_bool (boolean): boolean version of string
         """
         if non_bool in ("Yes", 1):
             return True
@@ -108,7 +106,7 @@ class Preprocesor:
         Args:
             num (integer): checkout day provided
         Returns:
-            num: absolute value of number given
+            num (integer): absolute value of number given
         """
         if num < 0:
             return abs(num)
@@ -119,7 +117,7 @@ class Preprocesor:
         Args:
             month (string): month input
         Returns:
-            month: month in title case
+            month (string): month in title case
         """
         if isinstance(month, str):
             return month.title()

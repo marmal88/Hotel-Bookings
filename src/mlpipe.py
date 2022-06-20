@@ -20,8 +20,6 @@ class MLpipeline:
 
     def __init__(self):
         """Instantiate MLpipeline object and load data
-        Args:
-            config (yaml): config yaml file
         """
         self.config = read_yaml_file()
         self.dependent_y = self.config["mlpipeline"]["dependent_y"]
@@ -37,7 +35,7 @@ class MLpipeline:
         """Model Pipeline for Logistic Regression Model
         Args:
             data (dataframe): Data as created after the preprocessing steps
-            model (string): Model to use
+            model (string): Name of model to use
         """
         if isinstance(model, str):
             if model == "lr":
@@ -109,10 +107,10 @@ class MLpipeline:
         Args:
             data (dataframe): dataframe to be put into machine learning model
         Returns:
-            X_train: independent variable used to train the model
-            X_test: dependent variable used to evaluate trained model
-            y_train: independent variable used for prediction
-            y_test: dependent variable used to evaluate prediction
+            X_train (dataframe): independent variable used to train the model
+            X_test (series): dependent variable used to evaluate trained model
+            y_train (dataframe): independent variable used for prediction
+            y_test (series): dependent variable used to evaluate prediction
         """
         X = data.drop(columns=self.dependent_y)
         y = data[self.dependent_y]
