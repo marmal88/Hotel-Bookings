@@ -69,15 +69,20 @@ Overview of the submitted folder and the folder structure
 
 The entire file system was created in a virtual environment using conda.
 
-Please execute the following steps in bash to replicate the virtual environment:
+Python 3.9 is required, please follow these steps to replicate the virtual environment:
 
 ```bash
 conda create -n aiap11 python=3.9.0
 conda activate aiap11
-conda install --file requirements.txt
 ```
 
-Please execute the following steps in bash to run the run.sh file:
+Install requirements file using:
+
+```bash
+pip install -r requirements.txt
+```
+
+Please execute the following steps in bash to run the run.sh file from root:
 
 ```bash
 ./run.sh
