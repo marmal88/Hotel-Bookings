@@ -8,15 +8,15 @@ preprocess:
   labels: ["Lowest", "Lower", "Middle" ,"Upper", "High"]
   exchange: 1.3439
 feature_eng:
-  ohe1: ["branch", "first_time"]
-  ore1: ["country"]
+  ohe1: ["branch", "first_time", "platform"]
+  ore1: ["country", "price_types"]
   sim1: ["SGD_price"]
-  ore2: ["branch", "country", "first_time"]
+  ore2: ["branch", "country", "first_time", "platform", "price_types"]
   sim2: ["SGD_price"]
   strategy: "mean"
 mlpipeline:
   dependent_y: no_show
-  drop: ["booking_id", "booking_month", "arrival_month", "arrival_day", "checkout_month", "checkout_day" , "price", "platform", "num_adults", "num_children", "currency", "price_types", "room"]
+  drop: ["booking_id", "booking_month", "arrival_month", "arrival_day", "checkout_month", "checkout_day" , "price", "num_adults", "num_children", "currency", "room"]
   results: True
   class_report: False
   lr:

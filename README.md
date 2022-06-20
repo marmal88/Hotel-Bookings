@@ -157,11 +157,14 @@ The key findings during the EDA process is summarized into the following table:
 | branch | Nominal Category| High proportion of no show for specific nationalities (CN, ID, MY)|
 | country | Nominal Category| More no shows at the Changi vs Orchard branch|
 | first_time | Boolean| First time customers proportion of no show at 98.75% |
+| platform| Nominal Category| Certain platforms websites have higher proportion of no show thatn others 45.34%|
+| price_type| Ordinal Category| Certain price ranges have higher proportion of no show than others|
 | SGD_price | Continuous Variable| Lower prices (mass market) tend to have more no shows|
 
 Additional Information
 
 - Decided to keep the above columns within the dataset as they were most indicitive of either a show or no show. (Summarized in reason column on table above)
+    - Columns can be adjusted using config file.
 - Of the above columns, both "with_child" and "SGD_price" were created from "num_children" and "price" columns respectively.
 - Checking for imbalance dataset:
   - Dataset is not overly skewed towards either show or no show.

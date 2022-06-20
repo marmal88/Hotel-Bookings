@@ -1,0 +1,12 @@
+
+Model Evaluation Metrics for Logistic Regression Classifier at time 2022-06-20-H10-M40-S26
+Logistic Regression Classifier Train Set Model Metrics
+Train Set Precision 62.65%
+Train Set Accuracy 69.66%
+Train Set Recall 45.22%
+Train Set F1-Score 52.53%
+Logistic Regression Classifier Test Set Model Metrics
+Test Set Precision 62.60%
+Test Set Accuracy 69.72%
+Test Set Recall 44.42%
+Test Set F1-Score 51.96%

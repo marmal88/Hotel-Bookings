@@ -1,0 +1,12 @@
+
+Model Evaluation Metrics for Decision Tree Classifier at time 2022-06-20-H10-M40-S27
+Decision Tree Classifier Train Set Model Metrics
+Train Set Precision 59.71%
+Train Set Accuracy 70.28%
+Train Set Recall 61.25%
+Train Set F1-Score 60.47%
+Decision Tree Classifier Test Set Model Metrics
+Test Set Precision 59.12%
+Test Set Accuracy 70.01%
+Test Set Recall 60.54%
+Test Set F1-Score 59.82%
