@@ -5,13 +5,14 @@ data:
 preprocess:
   int_cols: ["num_adults", "arrival_day", "checkout_day", "num_children"]
   bins: 5
-  labels: ["Lowest", "Lower", "Middle" ,"Upper", "High"]
+  encode: "ordinal"
+  strategy: "uniform"
   exchange: 1.3439
 feature_eng:
   ohe1: ["branch", "first_time", "platform"]
-  ore1: ["country", "price_types"]
+  ore1: ["country"]
   sim1: ["SGD_price"]
-  ore2: ["branch", "country", "first_time", "platform", "price_types"]
+  ore2: ["branch", "country", "first_time", "platform"]
   sim2: ["SGD_price"]
   strategy: "mean"
 mlpipeline:
@@ -24,17 +25,24 @@ mlpipeline:
     params:
       penalty: "l1"
       solver: "liblinear"
-      max_iter: 100
+      max_iter: 50
       c: 0.1
   dt:
     name: "Decision Tree Classifier"
     params:
-      max_depth: 20
-      min_samples_split: 4
+      max_depth: 5
+      min_samples_split: 3
+      min_samples_leaf: 10
+      criterion: 'log_loss'
+      splitter: 'best'
   rf:
     name: "Random Forest Classifier"
     params:
-      n_estimators: 150
-      max_depth: 3
-      min_samples_split: 4
+      n_estimators: 600
+      criterion: "log_loss"
+      max_depth: 15
+      min_samples_split: 50
+      min_samples_leaf: 100
+      max_leaf_nodes: 40
+      max_features: 
 

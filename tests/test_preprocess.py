@@ -3,7 +3,7 @@ import pytest
 import numpy as np
 import pandas as pd
 
-from src.preprocess import Preprocesor
+from src.app_func.preprocess import Preprocesor
 
 
 @pytest.fixture(name="fixture_Preprocess")

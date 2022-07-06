@@ -88,6 +88,11 @@ Please execute the following steps in bash to run the run.sh file from root:
 ./run.sh
 ```
 
+Please execute the following in bash to run the frontend.
+```bash
+python -m src.main
+```
+
 ### C.2 Pipeline Configuration
 
 The model config files can be found in config.yaml within the config folder of the src. The configurable parameters are categrized into:
@@ -124,10 +129,10 @@ graph LR;
     A([Preprocessing])-->B;
 
     B{Model Choice}-->C
-    C([Feature Engineering:</br> 1. OneHotEncoder,</br> 2. Ordinal Encoder,</br> 3. Simple Imputer</br>])-->D;
+    C([Feature Engineering:</br> 1. OneHotEncoder,</br> 2. Ordinal Encoder,</br> 3. Simple Imputer,</br> 4. Binning])-->D;
     D([Model Fitting</br>Logistic regression])-->E([Evalation Metrics]);
 
-    B-->F([Feature Engineering:</br> 1. Ordinal Encoder,</br> 2. Simple Imputer])
+    B-->F([Feature Engineering:</br> 1. Ordinal Encoder,</br> 2. Simple Imputer,</br> 4. Binning])
     F-->G([Model Fitting</br>Tree based models])
     G-->E
 ```

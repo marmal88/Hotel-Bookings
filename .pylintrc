@@ -151,7 +151,7 @@ disable=raw-checker-failed,
         useless-suppression,
         deprecated-pragma,
         use-symbolic-message-instead,
-        snake_case,
+        E0401,
         C0114,
         C0103,
 
