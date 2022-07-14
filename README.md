@@ -10,6 +10,7 @@
 - [Model Justification](#f-justification-of-model-choice)
 - [Evaluation of Metrics](#g-evaluation-of-model-metrics)
 - [Other Considerations](#h-other-considerations)
+- [Unit Testing with Pytest](#i-pytest)
 
 ---
 
@@ -200,9 +201,9 @@ Additional Information
 
 ### 3. Random Forest Classifier
 
-- Random Forest Model (RF) chosen over other decision tree models, for example XGBoost, due to the commercial nature of the question (hotel bookings)
+- Random Forest Model (RF) chosen over other decision tree models, for example ADABoost, due to the commercial nature of the question (hotel bookings)
 - Typically in commmercial situations, changes in data can rapid and hence needed a model that can deal with variance errors better.
-- Boosting models for eg XGBoost employs iterative strategy for adjusting an observation's weight based on the previous wrongly classified information, hence boosting models generally result in better prediction outcomes, but may not always generalize well.
+- Boosting models for eg ADA boost employs iterative strategy for adjusting an observation's weight based on the previous wrongly classified information, hence boosting models generally result in better prediction outcomes, but may not always generalize well.
 - Bagging models like Random Forest Classifiers create extra data by bagging (sampling with replacement) and create multiple parallel models of which predictions are chosen via majority vote. Bagging models hence deal better with data randomness and data variation.
 
 ---
@@ -236,7 +237,20 @@ Task: Formulate policies to reduce expenses incurred due to No-Shows. Some of th
 
 ---
 
-### Kudos
+## I. Pytest
+
+Activate pytest using
+
+```bash
+python -m pytest -v
+```
+Test cases:
+
+
+
+---
+
+## Kudos
 
 Here are some references to industry specifc websites I used to understand the problem better.
 
