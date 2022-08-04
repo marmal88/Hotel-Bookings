@@ -64,8 +64,8 @@ The entire file system was created in a virtual environment using conda.
 Python 3.9 is required, please follow these steps to replicate the virtual environment:
 
 ```bash
-conda create -n aiap11 python=3.9.0
-conda activate aiap11
+conda create -n hotel-book python=3.9.0
+conda activate hotel-book
 ```
 
 Install requirements file using:
