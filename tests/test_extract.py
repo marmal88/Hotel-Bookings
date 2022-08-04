@@ -3,7 +3,7 @@ import pytest
 
 # pylint: skip-file
 from src.config.config_load import read_yaml_file
-from src.extract import ImportData
+from src.app_func.extract import ImportData
 
 
 @pytest.fixture(name="fixture_extract")

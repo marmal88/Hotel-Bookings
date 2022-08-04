@@ -1,8 +1,7 @@
-# AIAP11 Assessment
+# Hotel Bookings
 
-## Table of Contents
+## A.Table of Contents
 
-- [Candidate Information](#a-candidate-information)
 - [Folder structure](#b-folder-structure)
 - [Pipeline and Configuration](#c-instructions-for-pipeline-and-configuration)
 - [Pipeline Flow Information](#d-pipeline-flow-information)
@@ -10,14 +9,7 @@
 - [Model Justification](#f-justification-of-model-choice)
 - [Evaluation of Metrics](#g-evaluation-of-model-metrics)
 - [Other Considerations](#h-other-considerations)
-
----
-
-## A. Candidate Information
-
-**Name:** Low Guangwen Daniel
-
-**Email:** dlow017@e.ntu.edu.sg
+- [Unit Testing with Pytest](#i-pytest)
 
 ---
 
@@ -88,6 +80,11 @@ Please execute the following steps in bash to run the run.sh file from root:
 ./run.sh
 ```
 
+Please execute the following in bash to run the frontend.
+```bash
+python -m src.main
+```
+
 ### C.2 Pipeline Configuration
 
 The model config files can be found in config.yaml within the config folder of the src. The configurable parameters are categrized into:
@@ -124,10 +121,10 @@ graph LR;
     A([Preprocessing])-->B;
 
     B{Model Choice}-->C
-    C([Feature Engineering:</br> 1. OneHotEncoder,</br> 2. Ordinal Encoder,</br> 3. Simple Imputer</br>])-->D;
+    C([Feature Engineering:</br> 1. OneHotEncoder,</br> 2. Ordinal Encoder,</br> 3. Simple Imputer,</br> 4. Binning])-->D;
     D([Model Fitting</br>Logistic regression])-->E([Evalation Metrics]);
 
-    B-->F([Feature Engineering:</br> 1. Ordinal Encoder,</br> 2. Simple Imputer])
+    B-->F([Feature Engineering:</br> 1. Ordinal Encoder,</br> 2. Simple Imputer,</br> 4. Binning])
     F-->G([Model Fitting</br>Tree based models])
     G-->E
 ```
@@ -195,9 +192,9 @@ Additional Information
 
 ### 3. Random Forest Classifier
 
-- Random Forest Model (RF) chosen over other decision tree models, for example XGBoost, due to the commercial nature of the question (hotel bookings)
+- Random Forest Model (RF) chosen over other decision tree models, for example ADABoost, due to the commercial nature of the question (hotel bookings)
 - Typically in commmercial situations, changes in data can rapid and hence needed a model that can deal with variance errors better.
-- Boosting models for eg XGBoost employs iterative strategy for adjusting an observation's weight based on the previous wrongly classified information, hence boosting models generally result in better prediction outcomes, but may not always generalize well.
+- Boosting models for eg ADA boost employs iterative strategy for adjusting an observation's weight based on the previous wrongly classified information, hence boosting models generally result in better prediction outcomes, but may not always generalize well.
 - Bagging models like Random Forest Classifiers create extra data by bagging (sampling with replacement) and create multiple parallel models of which predictions are chosen via majority vote. Bagging models hence deal better with data randomness and data variation.
 
 ---
@@ -231,7 +228,17 @@ Task: Formulate policies to reduce expenses incurred due to No-Shows. Some of th
 
 ---
 
-### Kudos
+## I. Pytest
+
+Activate pytest using
+
+```bash
+python -m pytest -v
+```
+
+---
+
+## Kudos
 
 Here are some references to industry specifc websites I used to understand the problem better.
 

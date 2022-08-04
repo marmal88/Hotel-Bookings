@@ -3,7 +3,7 @@ import pytest
 import os
 import pandas as pd
 
-from src.mlpipe import MLpipeline
+from src.app_func.mlpipe import MLpipeline
 
 
 @pytest.fixture(name="fixture_MLpipeline")
