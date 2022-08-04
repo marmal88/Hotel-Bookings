@@ -1,8 +1,7 @@
-# AIAP11 Assessment
+# Hotel Bookings
 
-## Table of Contents
+## A.Table of Contents
 
-- [Candidate Information](#a-candidate-information)
 - [Folder structure](#b-folder-structure)
 - [Pipeline and Configuration](#c-instructions-for-pipeline-and-configuration)
 - [Pipeline Flow Information](#d-pipeline-flow-information)
@@ -11,14 +10,6 @@
 - [Evaluation of Metrics](#g-evaluation-of-model-metrics)
 - [Other Considerations](#h-other-considerations)
 - [Unit Testing with Pytest](#i-pytest)
-
----
-
-## A. Candidate Information
-
-**Name:** Low Guangwen Daniel
-
-**Email:** dlow017@e.ntu.edu.sg
 
 ---
 
