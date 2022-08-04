@@ -235,9 +235,6 @@ Activate pytest using
 ```bash
 python -m pytest -v
 ```
-Test cases:
-
-
 
 ---
 
