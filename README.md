@@ -2,14 +2,25 @@
 
 ## A.Table of Contents
 
-- [Folder structure](#b-folder-structure)
-- [Pipeline and Configuration](#c-instructions-for-pipeline-and-configuration)
-- [Pipeline Flow Information](#d-pipeline-flow-information)
-- [Summary of EDA](#e-summary-of-eda-findings)
-- [Model Justification](#f-justification-of-model-choice)
-- [Evaluation of Metrics](#g-evaluation-of-model-metrics)
-- [Other Considerations](#h-other-considerations)
-- [Unit Testing with Pytest](#i-pytest)
+- [Hotel Bookings](#hotel-bookings)
+  - [A.Table of Contents](#atable-of-contents)
+  - [B. Folder Structure](#b-folder-structure)
+  - [C. Instructions for Pipeline and Configuration](#c-instructions-for-pipeline-and-configuration)
+    - [C.1 Deployment Information](#c1-deployment-information)
+    - [C.2 Docker Installation](#c2-docker-installation)
+      - [C.2.1 Docker Compose](#c21-docker-compose)
+      - [C.2.2 Docker File](#c22-docker-file)
+    - [C.3 Pipeline Configuration](#c3-pipeline-configuration)
+  - [D. Pipeline Flow Information](#d-pipeline-flow-information)
+  - [E. Summary of EDA Findings](#e-summary-of-eda-findings)
+  - [F. Justification of Model Choice](#f-justification-of-model-choice)
+    - [1. Logistic Regression](#1-logistic-regression)
+    - [2. Decision Tree Classifier](#2-decision-tree-classifier)
+    - [3. Random Forest Classifier](#3-random-forest-classifier)
+  - [G. Evaluation of Model Metrics](#g-evaluation-of-model-metrics)
+  - [H. Other Considerations](#h-other-considerations)
+  - [I. Pytest](#i-pytest)
+  - [Kudos](#kudos)
 
 ---
 
@@ -74,18 +85,46 @@ Install requirements file using:
 pip install -r requirements.txt
 ```
 
-Please execute the following steps in bash to run the run.sh file from root:
-
-```bash
-./run.sh
-```
-
 Please execute the following in bash to run the frontend.
 ```bash
-python -m src.main
+gunicorn src.main:server -b 0.0.0.0:6006
 ```
 
-### C.2 Pipeline Configuration
+### C.2 Docker Installation
+
+If deploying locally, [Docker Compose](#c21-docker-compose) and [Docker](#c22-docker-file), the application can be accessed via localhost:6006.
+
+#### C.2.1 Docker Compose
+The application gracefully started using the command:
+```bash
+docker-compose -f docker/docker-compose.yml up -d
+```
+To stop the docker-compose use the command:
+```bash
+docker-compose -f docker/docker-compose.yml down 
+```
+
+#### C.2.2 Docker File
+Alternatively if you would like to build the image from the dockerfile. 
+
+Please use the command:
+```bash
+docker build -f docker/hotel-booking.DockerFile \
+    -t hotel-booking:0.0.1 \
+    --platform linux/amd64 .
+```
+To launch a docker instance of the command please use:
+```bash
+docker run --rm -d -p 6006:6006 \
+    --name hotel-booking \
+    hotel-booking:0.0.1 
+```
+To stop the container use another terminal with the command:
+```bash
+docker container stop hotel-bookings
+```
+
+### C.3 Pipeline Configuration
 
 The model config files can be found in config.yaml within the config folder of the src. The configurable parameters are categrized into:
 
@@ -105,13 +144,13 @@ src
 As far as possible, the intent was to use a similar data pipeline for all three models to increase pipeline reusability, and to serve as a common baseline to compare the different models. However, during the feature engineering phase a similar pipeline across the three different models would have had higher computational cost (e.g. tree models need to work harder when computing sparse data). Hence I decided to optimize for the feature engineering steps that could get the best results in terms of both evaluation metrics and time from the different models.
 
 Hence, the overall pipeline was built to create a common preprocessing step while using sklearn's inbuilt pipeline to do the feature engineering. Overall pipeline is as below:
-| Step | File Location |Purpose |
-|---|---|---|
-| Data ingestion | extract.py | Connect and query database provided in config|
-| Preprocess | preprocess.py | Data cleaning and create new data types |
-| Feature Engineering | mlpipe.py | Employ feature engineering steps |
-| Model | mlpipe.py | Fit model to output of engineered data|
-| Evaluation Metrics | mlpipe.py | Run selected evaluation metrics on model output|
+| Step                | File Location | Purpose                                         |
+| ------------------- | ------------- | ----------------------------------------------- |
+| Data ingestion      | extract.py    | Connect and query database provided in config   |
+| Preprocess          | preprocess.py | Data cleaning and create new data types         |
+| Feature Engineering | mlpipe.py     | Employ feature engineering steps                |
+| Model               | mlpipe.py     | Fit model to output of engineered data          |
+| Evaluation Metrics  | mlpipe.py     | Run selected evaluation metrics on model output |
 
 The output of the pipleline is saved in the output folder of the directory as a txt file.
 
@@ -131,15 +170,15 @@ graph LR;
 
 Preprocessing steps undertaken:
 
-| Errors | Columns | Error Type (Assumption) | Treatment |
-|---|---|---|---|
-|Empty rows| All columns| Database parsing error | Removal of empty rows |
-|Free text error |num_adults| Data entry error| Converted text and numbers into numbers. Allow for up to 10 people in a presidential suite. [ref](https://www.suiteness.com/blog/connecting-suites-suites-different-rooms)|
-|Boolean|first_time, no_show| Type error | Converted float to boolean|
-|Free text error|arrival_month| Data entry error| Changed to title case|
-|Negative numbers in days|checkout_day| Data entry error| Return the absolute of those days|
-|Float point numbers|num_adults, arrival_day, checkout_day, num_children| Database parsing error | Converted float to integer|
-|Currency and price in same column|price|Database planning error|Split out currency and price and converting them to SGD using an average USD to SGD conversion rate (can be configured, see [yaml](#c2-pipeline-configuration))|
+| Errors                            | Columns                                             | Error Type (Assumption) | Treatment                                                                                                                                                                  |
+| --------------------------------- | --------------------------------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Empty rows                        | All columns                                         | Database parsing error  | Removal of empty rows                                                                                                                                                      |
+| Free text error                   | num_adults                                          | Data entry error        | Converted text and numbers into numbers. Allow for up to 10 people in a presidential suite. [ref](https://www.suiteness.com/blog/connecting-suites-suites-different-rooms) |
+| Boolean                           | first_time, no_show                                 | Type error              | Converted float to boolean                                                                                                                                                 |
+| Free text error                   | arrival_month                                       | Data entry error        | Changed to title case                                                                                                                                                      |
+| Negative numbers in days          | checkout_day                                        | Data entry error        | Return the absolute of those days                                                                                                                                          |
+| Float point numbers               | num_adults, arrival_day, checkout_day, num_children | Database parsing error  | Converted float to integer                                                                                                                                                 |
+| Currency and price in same column | price                                               | Database planning error | Split out currency and price and converting them to SGD using an average USD to SGD conversion rate (can be configured, see [yaml](#c2-pipeline-configuration))            |
 
 Feature Engineering steps undertaken:
 
@@ -153,15 +192,15 @@ Feature Engineering steps undertaken:
 
 The key findings during the EDA process is summarized into the following table:
 
-| Categories| Type| Reason|
-|---|---|---|
-| with_child | Boolean| Those with children have a 63.22% chance of no show |
-| branch | Nominal Category| High proportion of no show for specific nationalities (CN, ID, MY)|
-| country | Nominal Category| More no shows at the Changi vs Orchard branch|
-| first_time | Boolean| First time customers proportion of no show at 98.75% |
-| platform| Nominal Category| Certain platforms websites have higher proportion of no show thatn others 45.34%|
-| price_type| Ordinal Category| Certain price ranges have higher proportion of no show than others|
-| SGD_price | Continuous Variable| Lower prices (mass market) tend to have more no shows|
+| Categories | Type                | Reason                                                                           |
+| ---------- | ------------------- | -------------------------------------------------------------------------------- |
+| with_child | Boolean             | Those with children have a 63.22% chance of no show                              |
+| branch     | Nominal Category    | High proportion of no show for specific nationalities (CN, ID, MY)               |
+| country    | Nominal Category    | More no shows at the Changi vs Orchard branch                                    |
+| first_time | Boolean             | First time customers proportion of no show at 98.75%                             |
+| platform   | Nominal Category    | Certain platforms websites have higher proportion of no show thatn others 45.34% |
+| price_type | Ordinal Category    | Certain price ranges have higher proportion of no show than others               |
+| SGD_price  | Continuous Variable | Lower prices (mass market) tend to have more no shows                            |
 
 Additional Information
 
@@ -203,10 +242,10 @@ Additional Information
 
 Task: Formulate policies to reduce expenses incurred due to No-Shows. Some of the policies created might include:
 
-| Policy Proposals | Cost savings | Drawbacks |
-|---|---|---|
-|Lower prioritzation of clean up for high potential no show rooms| Lesser overall housekeeping resources used| Delayed guest experience during check-in period|
-|Double book a proportion of rooms with high potential to no-show| Possible extra revenue from new bookings| Potential disapointment from guest who do indeed show up (false positive)|
+| Policy Proposals                                                 | Cost savings                               | Drawbacks                                                                 |
+| ---------------------------------------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------- |
+| Lower prioritzation of clean up for high potential no show rooms | Lesser overall housekeeping resources used | Delayed guest experience during check-in period                           |
+| Double book a proportion of rooms with high potential to no-show | Possible extra revenue from new bookings   | Potential disapointment from guest who do indeed show up (false positive) |
 
 1. Optimize for which metrics?
     - Should optimize for **precision** (i.e. Within those that we classified as no-show, how many of them are indeed no-show?)
