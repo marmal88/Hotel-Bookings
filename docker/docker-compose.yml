@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  hotel-booking:
+    build:
+      context: .
+      dockerfile: docker/hotel-booking.DockerFile
+      args:
+        requirements: requirements.txt
+    image: hotel-booking:0.0.1
+    platform: linux/amd64
+    ports:
+      - "6006:6006"
+    restart: always
