@@ -38,6 +38,7 @@ app = Dash(
     external_stylesheets=[dbc.themes.SANDSTONE],
     suppress_callback_exceptions=True,
 )
+server=app.server
 
 # Application Layout
 navbar = dbc.Nav(
@@ -62,9 +63,7 @@ def render_page_content(pathname):
         return [
             dbc.Col(
                 [
-                    html.H1("Candidate Information", style={"textAlign": "left"}),
-                    html.H4("Name: Low Guangwen Daniel", style={"textAlign": "left"}),
-                    html.H4("Email: dlow017@e.ntu.edu.sg", style={"textAlign": "left"}),
+                    html.H1("Hotel Booking Application", style={"textAlign": "left"}),
                 ],
                 width={"size": 9, "offset": 2},
             ),
@@ -73,7 +72,7 @@ def render_page_content(pathname):
                 [
                     dbc.Col(
                         [
-                            html.H1("Interview Agenda", style={"textAlign": "Left"}),
+                            html.H1("Agenda", style={"textAlign": "Left"}),
                             dcc.Markdown(
                                 """
                                 ##### 1) Application Demonstration
@@ -275,5 +274,6 @@ def amount_warning(n_clicks, amount):
         return False
 
 
+
 if __name__ == "__main__":
-    app.run_server(host='127.0.0.1', port='8000', debug=True)
+    app.run_server(debug=True)

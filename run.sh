@@ -1,3 +1,3 @@
 #!/bin/sh
 
-python -m src.app
+gunicorn src.main:server -b 0.0.0.0:6006
