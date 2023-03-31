@@ -44,7 +44,7 @@ jobs:
 # Deployment
   deployment:
     runs-on: ubuntu-latest
-    needs: ["build"]
+    needs: ["unit-test"]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
